@@ -1,12 +1,17 @@
 import express, { response } from "express";
 import User from "../modules/user.mjs";
-import HttpCodes from "../modules/httpErrorCodes.mjs";
+import {HTTPMethods, HttpCodes}from "../modules/httpErrorCodes.mjs";
 
 const USER_API = express.Router();
 
 const users = [];
+// const helloWorldMiddleware = function (req, res, next){
+//     console.log("hello World");
+//     next();
+// }
+// USER_API.use(helloWorldMiddleware);
 
-USER_API.get('/:id', (req, res) => {
+USER_API.get('/:id', (req, res, next) => {
 
     // Tip: All the information you need to get the id part of the request can be found in the documentation 
     // https://expressjs.com/en/guide/routing.html (Route parameters)
