@@ -1,6 +1,6 @@
 import express from 'express' 
 import chalk from "chalk";
-import {HTTPMethods, HttpCodes  }from "./httpErrorCodes.mjs";
+import {HTTPMethods, HttpCodes  }from "./httpCodes.mjs";
 
 const LOGGING_LEVELS = {
     mehhh:0,

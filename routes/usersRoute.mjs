@@ -1,6 +1,6 @@
 import express, { response } from "express";
 import User from "../modules/user.mjs";
-import {HTTPMethods, HttpCodes}from "../modules/httpErrorCodes.mjs";
+import {HTTPMethods, HttpCodes}from "../modules/httpCodes.mjs";
 
 const USER_API = express.Router();
 
