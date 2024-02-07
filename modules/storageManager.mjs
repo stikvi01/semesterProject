@@ -11,6 +11,16 @@ class DBManager{
         }
     }
 
+    async updateUser(user){
+        const client = new Client(this.#credetials);
+        try{
+        await client.connect();
+        client.query("Update into public.Users")
+        
+    }catch(error){
+
+    }
+    }
     async createUser(user){
         const client = new Client(this.#credetials);
         try{
