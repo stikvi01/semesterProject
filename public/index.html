@@ -6,6 +6,121 @@
     <title>My app</title>
 </head>
 <body>
-    <h1>Hello there!</h1>
+    <div id="container">
+       
+        <img src="/fridge.png">
+        <h1>Hva er i kjøleskapet?</h1>
+        <input type="text" id="fridgeInp" placeholder="Egg">
+        <button id="btnAddIngredients">Legg til ingredienser</button>
+        <div id="ingridientsContainer">
+
+        </div>
+        <br>
+        <button id="btnGenerateRecipe">Generer middags forslag</button>
+
+    </div>
+    <div id="contentContainer">
+        <!-- Content you want to hide/show initially -->
+
+        <!-- New HTML structure to show when the button is pressed -->
+        <div id="recipeContainer" style="display: none;">
+            <!-- Your recipe content goes here -->
+            <h1>Middagsforslag</h1>
+            <p>This is your dynamically generated recipe content.</p>
+        </div>
+    </div>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family:monospace;
+            background-color: antiquewhite;
+        }
+
+        #container {
+            display: flex;
+            flex-direction: column;
+            max-width: 320px;
+            margin: 30px auto;
+            
+        }
+
+        h1{
+            color: #c5151c;
+        }
+
+        img{
+            max-width: 150px;
+            margin: 0px auto;
+        }
+
+        input{
+            color: gray;
+            background-color: #ebe6dc;
+            font-family:monospace;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+    
+
+        #btnAddIngredients{
+            color: gray;            
+            background-color: #e8c59c;
+            font-family:monospace;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+        #btnGenerateRecipe{
+            color:antiquewhite;
+            background-color: #5c914d;
+            font-family:monospace;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        #contentContainer {
+            display: flex;
+            flex-direction: column;
+            max-width: 320px;
+            margin: 30px auto;
+        }
+
+        #recipeContainer {
+            display: none;
+        }
+    </style>
+
+<script>
+   /* function generateRecipe() {
+        // Toggle the visibility of the containers
+        document.getElementById('container').style.display = 'none';
+        document.getElementById('recipeContainer').style.display = 'block';
+    }
+
+    let btnGenerateRecipe = document.getElementById("btnGenerateRecipe")
+    btnGenerateRecipe.addEventListener("click", function (evt) {
+        generateRecipe();
+    });
+
+    function addIngredients() {
+        // Implement your addIngredients logic here
+        console.log('Adding ingredients...');
+    }*/
+</script>
+    
 </body>
+
 </html>
