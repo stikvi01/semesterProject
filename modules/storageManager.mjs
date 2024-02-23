@@ -1,5 +1,5 @@
 import pg from "pg"
-import SuperLogger from "./SuperLogger.mjs";
+import logger from "./logging.mjs";
 
 // We are using an enviorment variable to get the db credentials 
 if (process.env.DB_CONNECTIONSTRING == undefined) {

@@ -6,12 +6,12 @@ import fs from "fs/promises"
 //#region  Construct for decorating output.
 
 let COLORS = {}; // Creating a lookup tbl to avoid having to use if/else if or switch. 
-COLORS[HTTPMethods.POST] = Chalk.yellow;
-COLORS[HTTPMethods.PATCH] = Chalk.yellow;
-COLORS[HTTPMethods.PUT] = Chalk.yellow;
-COLORS[HTTPMethods.GET] = Chalk.green;
-COLORS[HTTPMethods.DELETE] = Chalk.red;
-COLORS.Default = Chalk.gray;
+COLORS[HTTPMethods.POST] = chalk.yellow;
+COLORS[HTTPMethods.PATCH] = chalk.yellow;
+COLORS[HTTPMethods.PUT] = chalk.yellow;
+COLORS[HTTPMethods.GET] = chalk.green;
+COLORS[HTTPMethods.DELETE] = chalk.red;
+COLORS.Default = chalk.gray;
 
 // Convenience function
 // https://en.wikipedia.org/wiki/Convenience_function

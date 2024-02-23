@@ -1,7 +1,9 @@
-import express from 'express' // Express is installed using npm
+import 'dotenv/config' ;
+import express from 'express'; // Express is installed using npm
 import USER_API from './routes/usersRoute.mjs'; // This is where we have defined the API for working with users.
 import logger from './modules/logging.mjs';
 import errorHandler from './modules/errorHandler.mjs';
+
 
 // Creating an instance of the server
 const server = express();

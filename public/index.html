@@ -10,11 +10,10 @@
        
         <img src="/fridge.png">
         <h1>Hva er i kjøleskapet?</h1>
-        <input type="text" id="fridgeInp" placeholder="Egg">
+        <input type="text" id="fridgeInp" value="Egg">
         <button id="btnAddIngredients">Legg til ingredienser</button>
-        <div id="ingridientsContainer">
-
-        </div>
+        <ul id="ingredientsList"></ul> 
+     
         <br>
         <button id="btnGenerateRecipe">Generer middags forslag</button>
 
@@ -27,6 +26,7 @@
             <!-- Your recipe content goes here -->
             <h1>Middagsforslag</h1>
             <p>This is your dynamically generated recipe content.</p>
+            
         </div>
     </div>
     <style>
@@ -101,10 +101,43 @@
         #recipeContainer {
             display: none;
         }
+        ul{
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        ul li {
+            box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+            color: gray;
+            background-color: #ebe6dc;
+            font-family:monospace;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin: 10px 0;
+            flex-grow: 1;
+        }
     </style>
 
 <script>
-   /* function generateRecipe() {
+    
+    let btnAddIngredients = document.getElementById("btnAddIngredients");
+ 
+
+    
+    btnAddIngredients.addEventListener("click", function(evt){
+            let fridgeInp = document.getElementById("fridgeInp").value;
+            let ingredients = document.createElement("li");
+            ingredients.innerHTML = fridgeInp;
+            ingredientsList.appendChild(ingredients);
+        });
+
+   function generateRecipe() {
         // Toggle the visibility of the containers
         document.getElementById('container').style.display = 'none';
         document.getElementById('recipeContainer').style.display = 'block';
@@ -118,7 +151,7 @@
     function addIngredients() {
         // Implement your addIngredients logic here
         console.log('Adding ingredients...');
-    }*/
+    }
 </script>
     
 </body>
