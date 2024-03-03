@@ -1,39 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My app</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
+
 <body>
     <div id="container">
-       
-        <img src="fridge.png">
-        <h1>Hva er i kjøleskapet?</h1>
-        <input type="text" id="fridgeInp" value="Egg">
-        <button id="btnAddIngredients">Legg til ingredienser</button>
-        <ul id="ingredientsList"></ul> 
-     
-        <br>
-        <button id="btnGenerateRecipe">Generer middags forslag</button>
-
     </div>
-    <div id="contentContainer">
-        <!-- Content you want to hide/show initially -->
+    <script type="module">
 
-        <!-- New HTML structure to show when the button is pressed -->
-        <div id="recipeContainer" style="display: none;">
-            <!-- Your recipe content goes here -->
-            <h1>Middagsforslag</h1>
-            <p>This is your dynamically generated recipe content.</p>
-            
-        </div>
-    </div>
+        await insertTemplatesFrom("templates.html")
+
+        const homePage = document.querySelector("#homePage");
+        const recipeContainer = document.querySelector("#recipeContainer");
+        const shoppinglist = document.querySelector("#shoppinglist");
+        const userLogIn = document.querySelector("#userLogIn");
+        const userSignIn = document.querySelector("#userSignIn");
+        const userSettings = document.querySelector("#userSettings");
+        const container = document.getElementById("container");
+        const btnAddIngredients = document.getElementById("btnAddIngredients");
+        const btnGenerateRecipe = document.getElementById("btnGenerateRecipe");
+        const btnCreateShoppingList = document.getElementById("btnCreateShoppingList");
+        const btnUserPage = document.getElementById("btnUserPage");
+        const btnHome = document.getElementById("btnHome");
+        const btnSignIn = document.getElementById("btnSignIn");
+        const btnCreateUser = document.getElementById("btnCreateUser");
+        const btnLogIn = document.getElementById("btnLogIn");
+
+        const homePageContent = homePage.content.cloneNode(true);
+        container.appendChild(homePageContent);
+
+
+
+        async function insertTemplatesFrom(source) {
+            const templates = await fetch(source).then(d => d.text());
+            document.body.insertAdjacentHTML("beforeend", templates);
+        }
+
+
+        container.addEventListener("click", function (evt) {
+            if (evt.target.id === "btnAddIngredients") {
+                let fridgeInp = document.getElementById("fridgeInp").value;
+                let ingredients = document.createElement("li");
+                ingredients.innerHTML = fridgeInp;
+                ingredientsList.appendChild(ingredients);
+                
+            } else if (evt.target.id === "btnGenerateRecipe") {
+                container.innerHTML = "";
+                const recipeContainerContent = recipeContainer.content.cloneNode(true);
+                container.appendChild(recipeContainerContent);
+            } else if (evt.target.id === "btnUserPage") {
+                container.innerHTML = "";
+                const userLogInContent = userLogIn.content.cloneNode(true);
+                container.appendChild(userLogInContent);
+            } else if (evt.target.id === "btnHome") {
+                container.innerHTML = "";
+                const homePageContent = homePage.content.cloneNode(true);
+                container.appendChild(homePageContent);
+            }
+            else if (evt.target.id === "btnSignIn") {
+                container.innerHTML = "";
+                const userSignInContent = userSignIn.content.cloneNode(true);
+                container.appendChild(userSignInContent);
+            } else if (evt.target.id === "btnCreateUser") {
+                container.innerHTML = "";
+                const userLogInContent = userLogIn.content.cloneNode(true);
+                container.appendChild(userLogInContent);
+            } else if (evt.target.id === "btnLogIn") {
+                container.innerHTML = "";
+                const userSettingsContent = userSettings.content.cloneNode(true);
+                container.appendChild(userSettingsContent);
+            }
+        });
+
+
+    </script>
     <style>
-        html, body {
+        html,
+        body {
             margin: 0;
             padding: 0;
-            font-family:monospace;
+            font-family: monospace;
             background-color: antiquewhite;
         }
 
@@ -42,22 +94,22 @@
             flex-direction: column;
             max-width: 320px;
             margin: 30px auto;
-            
+
         }
 
-        h1{
+        h1 {
             color: #c5151c;
         }
 
-        img{
+        img {
             max-width: 150px;
             margin: 0px auto;
         }
 
-        input{
+        input {
             color: gray;
             background-color: #ebe6dc;
-            font-family:monospace;
+            font-family: monospace;
             border: 0;
             padding: 15px;
             border-radius: 8px;
@@ -66,12 +118,10 @@
             margin: 10px 0;
         }
 
-    
-
-        #btnAddIngredients{
-            color: gray;            
+        #btnAddIngredients {
+            color: gray;
             background-color: #e8c59c;
-            font-family:monospace;
+            font-family: monospace;
             border: 0;
             padding: 15px;
             border-radius: 8px;
@@ -79,16 +129,42 @@
             text-align: center;
             margin: 10px 0;
         }
-        #btnGenerateRecipe{
-            color:antiquewhite;
+
+        button {
+            color: antiquewhite;
             background-color: #5c914d;
-            font-family:monospace;
+            font-family: monospace;
             border: 0;
             padding: 15px;
             border-radius: 8px;
             font-size: 20px;
             text-align: center;
             margin: 10px 0;
+        }
+
+        #btnGenerateRecipe {
+            color: antiquewhite;
+            background-color: #5c914d;
+            font-family: monospace;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        #btnUserPage {
+            color: antiquewhite;
+            background-color: #e8c59c;
+            font-family: monospace;
+            border: 0;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 20px;
+            text-align: center;
+            margin: 10px 0;
+            width: 25%;
         }
 
         #contentContainer {
@@ -101,7 +177,8 @@
         #recipeContainer {
             display: none;
         }
-        ul{
+
+        ul {
             list-style-type: none;
             padding: 0;
             display: flex;
@@ -113,7 +190,7 @@
             box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
             color: gray;
             background-color: #ebe6dc;
-            font-family:monospace;
+            font-family: monospace;
             border: 0;
             padding: 15px;
             border-radius: 8px;
@@ -124,36 +201,6 @@
         }
     </style>
 
-<script>
-    
-    let btnAddIngredients = document.getElementById("btnAddIngredients");
- 
-
-    
-    btnAddIngredients.addEventListener("click", function(evt){
-            let fridgeInp = document.getElementById("fridgeInp").value;
-            let ingredients = document.createElement("li");
-            ingredients.innerHTML = fridgeInp;
-            ingredientsList.appendChild(ingredients);
-        });
-
-   function generateRecipe() {
-        // Toggle the visibility of the containers
-        document.getElementById('container').style.display = 'none';
-        document.getElementById('recipeContainer').style.display = 'block';
-    }
-
-    let btnGenerateRecipe = document.getElementById("btnGenerateRecipe")
-    btnGenerateRecipe.addEventListener("click", function (evt) {
-        generateRecipe();
-    });
-
-    function addIngredients() {
-        // Implement your addIngredients logic here
-        console.log('Adding ingredients...');
-    }
-</script>
-    
 </body>
 
 </html>
