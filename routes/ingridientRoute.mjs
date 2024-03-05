@@ -5,6 +5,12 @@ import { HttpCodes}from "../modules/httpCodes.mjs";
 const USER_API = express.Router();
 USER_API.use(express.json()); // This makes it so that express parses all incoming payloads as JSON for this route.
 
+const users = [];
+// const helloWorldMiddleware = function (req, res, next){
+//     console.log("hello World");
+//     next();
+// }
+// USER_API.use(helloWorldMiddleware);
 
 USER_API.get('/:id', (req, res, next) => {
 
@@ -20,15 +26,15 @@ USER_API.post('/', async (req, res, next) => {
     // This is using javascript object destructuring.
     // Recomend reading up https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
     // https://www.freecodecamp.org/news/javascript-object-destructuring-spread-operator-rest-parameter/
-    const { name, email, pswHash } = req.body;
+    const { name, email, password } = req.body;
 
-    if (name != "" && email != "" && pswHash != "") {
+    if (name != "" && email != "" && password != "") {
         let user = new User();
         user.name = name;
         user.email = email;
 
         ///TODO: Do not save passwords.
-        user.pswHash = pswHash;
+        user.pswHash = password;
 
         ///TODO: Does the user exist?
         let exists = false;
