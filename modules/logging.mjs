@@ -39,7 +39,7 @@ class logger{
      // What level of messages should we be logging.
     // This field is static 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/static
-    #globalThreshold = SuperLogger.LOGGING_LEVELS.ALL;
+    #globalThreshold = logger.LOGGING_LEVELS.ALL;
 
     // Structure to keep the misc log functions that get created.
     // This field is private.
@@ -57,7 +57,7 @@ static instance = null;
         if (logger.instance == null) {
         logger.instance = this;
         this.#loggers = [];
-        this.#globalThreshold = SuperLogger.LOGGING_LEVELS.NORMAL;
+        this.#globalThreshold = logger.LOGGING_LEVELS.NORMAL;
         }
         return logger.instance;
     }
