@@ -12,39 +12,24 @@
 <body>
     <div id="container">
     </div>
-    <div>
-        Name : <input type="text" id="name"><br>
-        Email: <input type="email" id="email"><br />
-        Password: <input type="password" id="pswHash"><br />
-        <button id="createUserButton">Create User</button>
-    </div>
+
 
     <script type="module">
-        const createUserButton = document.getElementById("createUserButton");
 
-createUserButton.onclick = async function (e) {
 
-    const name = document.getElementById("name").value;
-    
-    const email = document.getElementById("email").value;
-    const pswHash = document.getElementById("pswHash").value;
-    const user = { name, email, pswHash };
-    const respon = await postTo("/user", user);
+        async function postTo(url, data) {
+            const header = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
 
-}
+            const respon = await fetch(url, header);
+            return respon;
 
-async function postTo(url, data) {
-    const header = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-    };
-
-    const respon = await fetch(url, header);
-    return respon;
-}
+        }
 
         await insertTemplatesFrom("templates.html")
 
@@ -63,10 +48,10 @@ async function postTo(url, data) {
         const btnSignIn = document.getElementById("btnSignIn");
         const btnCreateUser = document.getElementById("btnCreateUser");
         const btnLogIn = document.getElementById("btnLogIn");
+        const userCreate = document.querySelector("#userCreate");
 
         const homePageContent = homePage.content.cloneNode(true);
         container.appendChild(homePageContent);
-
 
 
         async function insertTemplatesFrom(source) {
@@ -81,7 +66,7 @@ async function postTo(url, data) {
                 let ingredients = document.createElement("li");
                 ingredients.innerHTML = fridgeInp;
                 ingredientsList.appendChild(ingredients);
-                
+
             } else if (evt.target.id === "btnGenerateRecipe") {
                 container.innerHTML = "";
                 const recipeContainerContent = recipeContainer.content.cloneNode(true);
@@ -97,17 +82,25 @@ async function postTo(url, data) {
             }
             else if (evt.target.id === "btnSignIn") {
                 container.innerHTML = "";
-                const userSignInContent = userSignIn.content.cloneNode(true);
+                const userSignInContent = userCreate.content.cloneNode(true);
                 container.appendChild(userSignInContent);
-            } else if (evt.target.id === "btnCreateUser") {
-                container.innerHTML = "";
-                const userLogInContent = userLogIn.content.cloneNode(true);
-                container.appendChild(userLogInContent);
+                const createUserButton = document.getElementById("btnCreateUserSendData");
+                createUserButton.onclick = async function (e) {
+
+                    const name = document.getElementById("name").value;
+
+                    const email = document.getElementById("email").value;
+                    const pswHash = document.getElementById("pswHash").value;
+                    const user = { name, email, pswHash };
+                    const respon = await postTo("/user", user);
+
+                }
             } else if (evt.target.id === "btnLogIn") {
                 container.innerHTML = "";
                 const userSettingsContent = userSettings.content.cloneNode(true);
                 container.appendChild(userSettingsContent);
             }
+
         });
 
 
