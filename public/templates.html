@@ -25,19 +25,15 @@
 
 <template id="userLogIn">
     <h1>Logg inn</h1>
-    <input type="text" name="" id="username" placeholder="Brukernavn">
-    <input type="text" name="" id="password" placeholder="Passord">
+    <input type="email" id="userEmail" placeholder="email">
+    <input type="password" name="" id="userPswHash" placeholder="Passord">
     <button id="btnLogIn">Logg inn</button>
-    <button id="btnSignIn">Lag ny bruker</button>
+    <br>
+    <br>
+    <button id="btnSignIn">Lag en ny bruker</button>
     <button id="btnHome">Hjem</button>
 </template>
 
-<template id="userSignIn">
-    <h1>Lag bruker</h1>
-    <input type="text" name="" id="newUsername" placeholder="Brukernavn">
-    <input type="text" name="" id="newPassword" placeholder="Passord">
-    <button id="btnCreateUser">Lag en ny bruker</button>
-</template>
 
 <template id="userSettings">
     <h1>Profil</h1>
@@ -46,9 +42,10 @@
 
 <template id="userCreate">
     <div>
-        Name : <input type="text" id="name"><br>
-        Email: <input type="email" id="email"><br />
-        Password: <input type="password" id="pswHash"><br />
-        <button id="btnCreateUserSendData">Create User</button>
+        <h1>Lag bruker</h1>
+        <input type="text" id="name"placeholder="Brukernavn"><br>
+        <input type="email" id="email"placeholder="Email"><br />
+        <input type="password" id="pswHash"placeholder="Passord"><br />
+        <button id="btnCreateUserSendData">Lag bruker</button>
     </div>
 </template>

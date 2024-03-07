@@ -31,6 +31,20 @@
 
         }
 
+        async function logIn(url, data) {
+            const header = {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+
+            const respon = await fetch(url, header);
+            return respon;
+
+        }
+
         await insertTemplatesFrom("templates.html")
 
         const homePage = document.querySelector("#homePage");
@@ -47,7 +61,7 @@
         const btnHome = document.getElementById("btnHome");
         const btnSignIn = document.getElementById("btnSignIn");
         const btnCreateUser = document.getElementById("btnCreateUser");
-        const btnLogIn = document.getElementById("btnLogIn");
+
         const userCreate = document.querySelector("#userCreate");
 
         const homePageContent = homePage.content.cloneNode(true);
@@ -74,7 +88,21 @@
             } else if (evt.target.id === "btnUserPage") {
                 container.innerHTML = "";
                 const userLogInContent = userLogIn.content.cloneNode(true);
-                container.appendChild(userLogInContent);
+                container.appendChild(userLogInContent)
+
+                const btnLogIn = document.getElementById("btnLogIn");
+
+                btnLogIn.onclick = async function (e) {
+                    const email = document.getElementById("userEmail").value;
+                    const pswHash = document.getElementById("userPswHash").value;
+                    const user = { email, pswHash };
+                    const respon = await logIn("/user", user);
+                    console.log(respon);
+                    
+                    // container.innerHTML = "";
+                    // const userSettingsContent = userSettings.content.cloneNode(true);
+                    // container.appendChild(userLouserSettingsContentgInContent);
+                };
             } else if (evt.target.id === "btnHome") {
                 container.innerHTML = "";
                 const homePageContent = homePage.content.cloneNode(true);
@@ -86,19 +114,21 @@
                 container.appendChild(userSignInContent);
                 const createUserButton = document.getElementById("btnCreateUserSendData");
                 createUserButton.onclick = async function (e) {
-
                     const name = document.getElementById("name").value;
-
                     const email = document.getElementById("email").value;
                     const pswHash = document.getElementById("pswHash").value;
                     const user = { name, email, pswHash };
                     const respon = await postTo("/user", user);
 
-                }
+                    container.innerHTML = "";
+                    const userLogInContent = userLogIn.content.cloneNode(true);
+                    container.appendChild(userLogInContent);
+                };
             } else if (evt.target.id === "btnLogIn") {
-                container.innerHTML = "";
-                const userSettingsContent = userSettings.content.cloneNode(true);
-                container.appendChild(userSettingsContent);
+                // container.innerHTML = "";
+                // const userSettingsContent = userSettings.content.cloneNode(true);
+                // container.appendChild(userSettingsContent);
+
             }
 
         });
