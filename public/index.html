@@ -27,6 +27,7 @@
             };
 
             const respon = await fetch(url, header);
+     
             return respon;
 
         }
@@ -41,6 +42,8 @@
             };
 
             const respon = await fetch(url, header);
+           
+ 
             return respon;
 
         }
@@ -96,12 +99,15 @@
                     const email = document.getElementById("userEmail").value;
                     const pswHash = document.getElementById("userPswHash").value;
                     const user = { email, pswHash };
-                    const respon = await logIn("/user", user);
+                    const respon = await logIn("/user/login", user);
                     console.log(respon);
-                    
-                    // container.innerHTML = "";
-                    // const userSettingsContent = userSettings.content.cloneNode(true);
-                    // container.appendChild(userLouserSettingsContentgInContent);
+                    const responseData = await respon.json();
+                    console.log(responseData); 
+                    const userId = responseData.id
+                    localStorage.setItem ("userId", userId );
+                    container.innerHTML = "";
+                    const userSettingsContent = userSettings.content.cloneNode(true);
+                    container.appendChild(userSettingsContent);
                 };
             } else if (evt.target.id === "btnHome") {
                 container.innerHTML = "";
@@ -119,10 +125,10 @@
                     const pswHash = document.getElementById("pswHash").value;
                     const user = { name, email, pswHash };
                     const respon = await postTo("/user", user);
-
-                    container.innerHTML = "";
-                    const userLogInContent = userLogIn.content.cloneNode(true);
-                    container.appendChild(userLogInContent);
+                    console.log(respon);
+                    // container.innerHTML = "";
+                    // const userLogInContent = userLogIn.content.cloneNode(true);
+                    // container.appendChild(userLogInContent);
                 };
             } else if (evt.target.id === "btnLogIn") {
                 // container.innerHTML = "";

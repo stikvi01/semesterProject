@@ -28,6 +28,30 @@ class User {
       /// TODO: What happens if the DBManager fails to complete its task?
       DBManager.deleteUser(this);
     }
+
+  async login() {
+    let dbUser = await DBManager.loginUser(this.email, this.pswHash);
+    
+    if (dbUser.id != null) {
+      this.id = dbUser.id;
+      this.name = dbUser.name;
+      this.email = dbUser.email;
+      this.pswHash = dbUser.pswHash;
+     
+      return {
+        success: true,
+        user: {
+          id: this.id,
+          name: this.name,
+          email: this.email,
+          // Include any other relevant user information here
+        }
+      }
+    } else {
+      
+      return null; // You might want to return a special value or throw an error here
+    }
+  }
   }
   
   export default User;

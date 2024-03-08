@@ -13,7 +13,9 @@ const logg = new logger();
 server.use(logg.createAutoHTTPRequestLogger()); 
 server.use(express.static('public'));
 
-server.use("/user", USER_API);
+server.use("/user", USER_API); 
+
+
 
 server.get("/", (req, res, next) => {
 

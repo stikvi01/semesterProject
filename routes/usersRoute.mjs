@@ -15,6 +15,40 @@ USER_API.get('/:id', (req, res, next) => {
     // Return user object
 })
 
+USER_API.post('/login', async (req, res) => {
+    const { email, pswHash } = req.body;
+
+    if (!email || !pswHash) {
+        return res.status(HttpCodes.ClientSideErrorRespons.BadRequest).send("Missing data fields");
+    }
+
+    try {
+        const user = new User();
+        user.email = email;
+        user.pswHash = pswHash;
+        const loginResult = await user.login();
+
+        //console.log("User", loginResult);
+
+        if (loginResult.success) {
+            const userInfo = loginResult.user;
+            res.status(HttpCodes.SuccesfullRespons.Ok).json(userInfo).end();
+        } else {
+            console.error("Login failed:", loginResult.message);
+            if (loginResult.error) {
+                console.error("Detailed error:", loginResult.error);
+            }
+            res.status(HttpCodes.ClientSideErrorRespons.Unauthorized).send("Invalid login credentials");
+        }
+    } catch (error) {
+        // Handle other errors
+        console.error("Unexpected error:", error);
+        res.status(HttpCodes.ServerSideErrorRespons.InternalServerError).send("Internal server error");
+    }
+});
+
+
+
 USER_API.post('/', async (req, res, next) => {
 
     // This is using javascript object destructuring.
@@ -58,5 +92,4 @@ USER_API.delete('/:id', (req, res) => {
     const user = new User(); //TODO: Actual user
     user.delete();
 });
-
 export default USER_API

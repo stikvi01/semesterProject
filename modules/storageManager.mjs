@@ -92,34 +92,25 @@ class DBManager {
     }
 
     async loginUser(email, password) {
-        let user  = null;
+        const client = new pg.Client(this.#credentials);
+        let user = null;
+    
         try {
-            const sql = "SELECT * FROM Users WHERE email = $1 AND pswHash = $2";
-            const parms = [email, password];
             await client.connect();
-            const output = await client.query(sql, parms);
-
-            if (output.rows.length == 1) {
-                user = output.rows[0];
-
-            } else if (output.rows.length == 0) {
-                throw new Error(HttpCodes.ClientSideErrorRespons.NotFound + 'Feil epost eller passord');
-                // bruker har tatet feil epost, eller passord
-            } else {
-                throw new Error(HttpCodes.ClientSideErrorRespons.BadRequest + 'Flere brukere med samme epost og passord');
-                // det er flere brukere med denne eposten og dette passordet
-            }
-
+            const output = await client.query('SELECT * FROM "public"."Users" WHERE "email" = $1', [email]);
+    
+            console.log(output);
+            user = output.rows[0];
+            // Rest of your code
+    
         } catch (error) {
-            console.error('Error logging in:', error.message);
+            console.error('Error logging in:', error.stack);
         } finally {
-            client.end(); 
+            client.end();
         }
-
+    
         return user;
     }
-
-}
+}    
 
 export default new DBManager(process.env.DB_CONNECTIONSTRING_PROD);
-
