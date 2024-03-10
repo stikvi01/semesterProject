@@ -23,11 +23,40 @@ class User {
       }
     }
   
-    delete() {
+   async delete() {
   
       /// TODO: What happens if the DBManager fails to complete its task?
-      DBManager.deleteUser(this);
+      if (this.id != null){
+        return await DBManager.deleteUser(this);
+      }
+     
     }
+
+    async getUser() {
+      let dbUser = await DBManager.loginUser(this.id);
+      
+      if (dbUser.id != null) {
+        this.id = dbUser.id;
+        this.name = dbUser.name;
+        this.email = dbUser.email;
+        this.pswHash = dbUser.pswHash;
+       
+        return {
+          success: true,
+          user: {
+            id: this.id,
+            name: this.name,
+            email: this.email,
+            // Include any other relevant user information here
+          }
+        }
+      } else {
+        
+        return null; // You might want to return a special value or throw an error here
+      }
+    }
+
+    
 
   async login() {
     let dbUser = await DBManager.loginUser(this.email, this.pswHash);
@@ -49,7 +78,9 @@ class User {
       }
     } else {
       
-      return null; // You might want to return a special value or throw an error here
+      return {
+        success: false
+      } // You might want to return a special value or throw an error here
     }
   }
   }

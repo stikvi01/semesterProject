@@ -42,26 +42,24 @@ class DBManager {
     }
 
     async deleteUser(user) {
-
         const client = new pg.Client(this.#credentials);
-
+    
         try {
             await client.connect();
             const output = await client.query('DELETE FROM "public"."Users" WHERE id = $1;', [user.id]);
-
-            // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
-            // Of special intrest is the rows and rowCount properties of this object.
-
-            //TODO: Did the user get deleted?
-
+            // Check if the user got deleted if needed
+            return true;
         } catch (error) {
-            //TODO : Error handling?? Remember that this is a module seperate from your server 
+            console.error("Error deleting user:", error);
+            throw error; // Handle or rethrow the error
         } finally {
             client.end(); // Always disconnect from the database.
         }
-
-        return user;
     }
+    
+
+
+    
 
     async createUser(user) {
 
@@ -90,14 +88,13 @@ class DBManager {
         return user;
 
     }
-
-    async loginUser(email, password) {
+    async get(user) {
         const client = new pg.Client(this.#credentials);
         let user = null;
     
         try {
             await client.connect();
-            const output = await client.query('SELECT * FROM "public"."Users" WHERE "email" = $1', [email]);
+            const output = await client.query('SELECT * FROM "public"."Users" WHERE "id" = $1', [user.id]);
     
             console.log(output);
             user = output.rows[0];
@@ -111,6 +108,52 @@ class DBManager {
     
         return user;
     }
+
+
+    async loginUser(email, password) {
+        const client = new pg.Client(this.#credentials);
+        let user = null;
+    
+        try {
+            await client.connect();
+            const output = await client.query('SELECT * FROM "public"."Users" WHERE "email" = $1', [user.email]);
+    
+            console.log(output);
+            user = output.rows[0];
+            // Rest of your code
+    
+        } catch (error) {
+            console.error('Error logging in:', error.stack);
+        } finally {
+            client.end();
+        }
+    
+        return user;
+    }
+
+    async getRecipie(ingridients) {
+        const client = new pg.Client(this.#credentials);
+        try {
+            await client.connect();
+            console.log('Connected to the database');
+    
+            const output = await client.query('SELECT * FROM "public"."recipies";');
+            console.log('Query executed successfully');
+    
+            recipie = output.rows;  // Make sure to assign a value to recipie
+    
+        } catch (error) {
+            console.error('Error in getRecipie:', error.stack);
+            // Rethrow the error to propagate it to the caller
+            throw error;
+        } finally {
+            client.end();
+            console.log('Disconnected from the database');
+        }
+    
+        return recipie;
+    }
+    
 }    
 
 export default new DBManager(process.env.DB_CONNECTIONSTRING_PROD);
