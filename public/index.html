@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My app</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="./sha256.js"></script>
 
 </head>
 
@@ -27,7 +28,7 @@
             };
 
             const respon = await fetch(url, header);
-     
+
             return respon;
 
         }
@@ -42,9 +43,57 @@
             };
 
             const respon = await fetch(url, header);
-           
- 
+
+
             return respon;
+
+        }
+        async function deleteUser(url) {
+            const header = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+
+            try {
+                const response = await fetch(url, header);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                return response;
+            } catch (error) {
+                console.error("Error during delete request:", error);
+                throw error;
+            }
+        }
+
+        async function getUser(url, data) {
+            const header = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+
+            const respon = await fetch(url, header);
+
+
+            return respon;
+
+        }
+        async function getRecipies(url, data) {
+            const header = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            };
+            const response = await fetch(url, header);
+            return response;
 
         }
 
@@ -58,14 +107,13 @@
         const userSettings = document.querySelector("#userSettings");
         const container = document.getElementById("container");
         const btnAddIngredients = document.getElementById("btnAddIngredients");
-        const btnGenerateRecipe = document.getElementById("btnGenerateRecipe");
         const btnCreateShoppingList = document.getElementById("btnCreateShoppingList");
         const btnUserPage = document.getElementById("btnUserPage");
         const btnHome = document.getElementById("btnHome");
         const btnSignIn = document.getElementById("btnSignIn");
         const btnCreateUser = document.getElementById("btnCreateUser");
-
         const userCreate = document.querySelector("#userCreate");
+
 
         const homePageContent = homePage.content.cloneNode(true);
         container.appendChild(homePageContent);
@@ -77,38 +125,81 @@
         }
 
 
-        container.addEventListener("click", function (evt) {
+        container.addEventListener("click", async function (evt) {
             if (evt.target.id === "btnAddIngredients") {
                 let fridgeInp = document.getElementById("fridgeInp").value;
                 let ingredients = document.createElement("li");
                 ingredients.innerHTML = fridgeInp;
                 ingredientsList.appendChild(ingredients);
+                const btnGenerateRecipe = document.getElementById("btnGenerateRecipe");
+                btnGenerateRecipe.onclick = async function (evt) {
+                    const ingridentsValue = ingredients.value
+                    const response = await getRecipies("/recipie", ingridentsValue)
+                    console.log(response.status);
+                    const responseData = await response.json();
+                    console.log(responseData);
+                }
 
             } else if (evt.target.id === "btnGenerateRecipe") {
-                container.innerHTML = "";
-                const recipeContainerContent = recipeContainer.content.cloneNode(true);
-                container.appendChild(recipeContainerContent);
+                // container.innerHTML = "";
+                // const recipeContainerContent = recipeContainer.content.cloneNode(true);
+                // container.appendChild(recipeContainerContent);
             } else if (evt.target.id === "btnUserPage") {
-                container.innerHTML = "";
-                const userLogInContent = userLogIn.content.cloneNode(true);
-                container.appendChild(userLogInContent)
+                let userId = localStorage.getItem("userId");
+                if (!userId) {
 
-                const btnLogIn = document.getElementById("btnLogIn");
+                    container.innerHTML = "";
+                    const userLogInContent = userLogIn.content.cloneNode(true);
+                    container.appendChild(userLogInContent)
 
-                btnLogIn.onclick = async function (e) {
-                    const email = document.getElementById("userEmail").value;
-                    const pswHash = document.getElementById("userPswHash").value;
-                    const user = { email, pswHash };
-                    const respon = await logIn("/user/login", user);
-                    console.log(respon);
-                    const responseData = await respon.json();
-                    console.log(responseData); 
-                    const userId = responseData.id
-                    localStorage.setItem ("userId", userId );
+                    const btnLogIn = document.getElementById("btnLogIn");
+
+                    btnLogIn.onclick = async function (e) {
+                        const email = document.getElementById("userEmail").value;
+                        let pswHash = document.getElementById("userPswHash").value;
+                        // pswHash = await sha256(pswHash);
+                        const user = { email, pswHash };
+                        console.log(user);
+                        const respon = await logIn("/user/login", user);
+                        console.log(respon);
+                        const responseData = await respon.json();
+                        console.log(responseData);
+
+                        const userId = responseData.id;
+                        const userName = responseData.name;
+                        const userEmail = responseData.email;
+                        localStorage.setItem("userId", userId);
+                        localStorage.setItem("userName", userName);
+                        localStorage.setItem("userEmail", userEmail);
+
+                        container.innerHTML = "";
+                        const userSettingsContent = userSettings.content.cloneNode(true);
+                        container.appendChild(userSettingsContent);
+
+                        const userEmailValue = document.getElementById("userEmailValue");
+                        const userNameValue = document.getElementById("userNameValue");
+                        const btnDeleteUser = document.getElementById("btnDeleteUser");
+                        userEmailValue.innerHTML += responseData.email
+                        userNameValue.innerHTML = responseData.name
+
+                        btnDeleteUser.onclick = async function (e) {
+                            const respon = await deleteUser(`/user/${userId}`);
+                            console.log(respon);
+                        }
+
+
+                    };
+                } else {
                     container.innerHTML = "";
                     const userSettingsContent = userSettings.content.cloneNode(true);
                     container.appendChild(userSettingsContent);
-                };
+                    const userEmail = localStorage.getItem("userEmail")
+                    const userName = localStorage.getItem("userName")
+                    userEmailValue.innerHTML += userEmail
+                    userNameValue.innerHTML = userName
+
+                }
+
             } else if (evt.target.id === "btnHome") {
                 container.innerHTML = "";
                 const homePageContent = homePage.content.cloneNode(true);
@@ -122,7 +213,8 @@
                 createUserButton.onclick = async function (e) {
                     const name = document.getElementById("name").value;
                     const email = document.getElementById("email").value;
-                    const pswHash = document.getElementById("pswHash").value;
+                    let pswHash = document.getElementById("pswHash").value;
+                    pswHash = await sha256(pswHash);
                     const user = { name, email, pswHash };
                     const respon = await postTo("/user", user);
                     console.log(respon);
@@ -130,11 +222,13 @@
                     // const userLogInContent = userLogIn.content.cloneNode(true);
                     // container.appendChild(userLogInContent);
                 };
-            } else if (evt.target.id === "btnLogIn") {
-                // container.innerHTML = "";
-                // const userSettingsContent = userSettings.content.cloneNode(true);
-                // container.appendChild(userSettingsContent);
-
+            } 
+            else if (evt.target.id === "btnLogOut") {
+                let userId = "";
+                localStorage.setItem("userId", userId);
+                container.innerHTML = "";
+                const homePageContent = homePage.content.cloneNode(true);
+                container.appendChild(homePageContent);
             }
 
         });
