@@ -138,6 +138,7 @@
                     console.log(response.status);
                     const responseData = await response.json();
                     console.log(responseData);
+
                 }
 
             } else if (evt.target.id === "btnGenerateRecipe") {
@@ -165,7 +166,7 @@
                         const responseData = await respon.json();
                         console.log(responseData);
 
-                        const userId = responseData.id;
+                        let userId = responseData.id;
                         const userName = responseData.name;
                         const userEmail = responseData.email;
                         localStorage.setItem("userId", userId);
@@ -185,6 +186,12 @@
                         btnDeleteUser.onclick = async function (e) {
                             const respon = await deleteUser(`/user/${userId}`);
                             console.log(respon);
+                            userId = "";
+                            localStorage.setItem("userId", userId);
+                            container.innerHTML = "";
+                            const homePageContent = homePage.content.cloneNode(true);
+                            container.appendChild(homePageContent);
+
                         }
 
 
@@ -218,11 +225,11 @@
                     const user = { name, email, pswHash };
                     const respon = await postTo("/user", user);
                     console.log(respon);
-                    // container.innerHTML = "";
-                    // const userLogInContent = userLogIn.content.cloneNode(true);
-                    // container.appendChild(userLogInContent);
+                    container.innerHTML = "";
+                    const userLogInContent = userLogIn.content.cloneNode(true);
+                    container.appendChild(userLogInContent);
                 };
-            } 
+            }
             else if (evt.target.id === "btnLogOut") {
                 let userId = "";
                 localStorage.setItem("userId", userId);
