@@ -90,7 +90,7 @@ class DBManager {
     }
     async get(user) {
         const client = new pg.Client(this.#credentials);
-        let user = null;
+        user = null;
     
         try {
             await client.connect();
@@ -116,11 +116,11 @@ class DBManager {
     
         try {
             await client.connect();
-            const output = await client.query('SELECT * FROM "public"."Users" WHERE "email" = $1', [user.email]);
+            const output = await client.query('SELECT * FROM "public"."Users" WHERE "email" = $1', [email]);
     
             console.log(output);
             user = output.rows[0];
-            // Rest of your code
+           
     
         } catch (error) {
             console.error('Error logging in:', error.stack);
