@@ -86,16 +86,23 @@
 
         }
         async function getRecipies(url, data) {
+            // Convert the array to a comma-separated string and append it to the URL
+            const dataPrams = data.join(',');
+            const paramUrl = `${url}?ingredients=${dataPrams}`;
+
             const header = {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                }
+                },
             };
-            const response = await fetch(url, header);
-            return response;
 
+            const response = await fetch(paramUrl, header);
+            console.log(header);
+          
+            return response;
         }
+
 
         await insertTemplatesFrom("templates.html")
 
@@ -133,8 +140,11 @@
                 ingredientsList.appendChild(ingredients);
                 const btnGenerateRecipe = document.getElementById("btnGenerateRecipe");
                 btnGenerateRecipe.onclick = async function (evt) {
-                    const ingridentsValue = ingredients.value
-                    const response = await getRecipies("/recipie", ingridentsValue)
+                    const ingredientsArray = Array.from(ingredientsList.children).map(item => item.textContent);
+
+        
+
+                    const response = await getRecipies("/recipie", ingredientsArray)
                     console.log(response.status);
                     const responseData = await response.json();
                     console.log(responseData);
@@ -158,7 +168,7 @@
                     btnLogIn.onclick = async function (e) {
                         const email = document.getElementById("userEmail").value;
                         let pswHash = document.getElementById("userPswHash").value;
-                        // pswHash = await sha256(pswHash);
+                        pswHash = await sha256(pswHash);
                         const user = { email, pswHash };
                         console.log(user);
                         const respon = await logIn("/user/login", user);
@@ -226,8 +236,8 @@
                     const respon = await postTo("/user", user);
                     console.log(respon);
                     container.innerHTML = "";
-                    const userLogInContent = userLogIn.content.cloneNode(true);
-                    container.appendChild(userLogInContent);
+                    const homePageContent = homePage.content.cloneNode(true);
+                    container.appendChild(homePageContent);
                 };
             }
             else if (evt.target.id === "btnLogOut") {

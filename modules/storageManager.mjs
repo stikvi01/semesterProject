@@ -131,29 +131,38 @@ class DBManager {
         return user;
     }
 
-    async getRecipie(ingridients) {
+    async getRecipe(ingredientList) {
         const client = new pg.Client(this.#credentials);
+        let recipes = [];
+    
         try {
             await client.connect();
             console.log('Connected to the database');
     
-            const output = await client.query('SELECT * FROM "public"."recipies";');
-            console.log('Query executed successfully');
+            for (const ingredient of ingredientList) {
+               
+                const queryText = 'SELECT * FROM "public"."ingredients" WHERE "name" LIKE $1';
+                const output = await client.query(queryText, [`%${ingredient}%`]);
     
-            recipie = output.rows;  // Make sure to assign a value to recipie
+                console.log('Query executed successfully');
     
+               
+                recipes.push(output.rows);
+                console.log(recipes);
+            }
         } catch (error) {
-            console.error('Error in getRecipie:', error.stack);
-            // Rethrow the error to propagate it to the caller
+            console.error('Error in getRecipe:', error.stack);
+           
             throw error;
         } finally {
             client.end();
             console.log('Disconnected from the database');
         }
     
-        return recipie;
+        return recipes;
     }
     
+      
 }    
 
 export default new DBManager(process.env.DB_CONNECTIONSTRING_PROD);

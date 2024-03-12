@@ -2,32 +2,29 @@ import DBManager from "./storageManager.mjs";
 
 class Recipe {
 
-    constructor() {
-      this.recipieId;
-      this.name;
-      this.desc;
-      this.steps;
-      this.ingridents;
-    }
-  
-    async getRecipie() {
-
-    let dbRecipie = await DBManager.getRecipie(this);
-
-    if (dbRecipie.ingridents != null){
-        return {
-            success: true,
-            user: {
-              id: this.recipieId,
-              name: this.name,
-              desc: this.desc,
-              steps: this.steps,
-              ingridents: this.ingridents
-              // Include anys other relevant user information here
-            }
-          }
-    }
-      
-    }
+  constructor() {
+    this.recipieId;
+    this.name;
+    this.desc;
+    this.steps;
+    this.ingridents;
   }
+
+  async getRecipie(ingredientsArray) {
+       // Assuming you need to pass the ingredientsArray to the DBManager
+       let dbRecipie = await DBManager.getRecipe(ingredientsArray);
+
+       if (dbRecipie.length > 0) {
+         return {
+           success: true,
+           recipies: dbRecipie, // Adjust the property name if needed
+         };
+       }
+   
+       return {
+         success: false,
+         error: "No matching recipes found",
+       };
+     }
+}
 export default Recipe
