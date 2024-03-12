@@ -21,7 +21,7 @@ class DBManager {
         try {
             await client.connect();
             const output = await client.query('UPDATE "public"."Users" set "name" = $1, "email" = $2, "pswHash" = $3 where id = $4;', [user.name, user.email, user.pswHash, user.id]);
-
+            
             // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
             // Of special intrest is the rows and rowCount properties of this object.
 
@@ -34,8 +34,10 @@ class DBManager {
         }
 
         return user;
+    
 
     }
+    
 
     async deleteUser(user) {
         const client = new pg.Client(this.#credentials);

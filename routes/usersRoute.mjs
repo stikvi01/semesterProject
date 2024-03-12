@@ -42,7 +42,7 @@ USER_API.post('/login', async (req, res, next) => {
         user.pswHash = pswHash;
         const loginResult = await user.login();
 
-        
+
 
         if (loginResult.success) {
             const userInfo = loginResult.user;
@@ -90,10 +90,24 @@ USER_API.post('/', async (req, res, next) => {
 
 });
 
-USER_API.put('/:id', (req, res) => {
-    /// TODO: Edit user
-    const user = new User(); //TODO: The user info comes as part of the request 
-    user.save();
+USER_API.put('/:id', async (req, res) => {
+    const { name, email, pswHash, id } = req.body;
+    let user = new User(); //TODO: The user info comes as part of the request 
+    user.name = name;
+    user.email = email;
+    user.pswHash = pswHash;
+    user.id = id
+
+    let exists = false;
+
+    if (!exists) {
+
+        user = await user.save();
+        res.status(HttpCodes.SuccesfullRespons.Ok).json(JSON.stringify(user)).end();
+    } else {
+        res.status(HttpCodes.ClientSideErrorRespons.BadRequest).end();
+    }
+
 });
 
 USER_API.delete('/:id', async (req, res) => {

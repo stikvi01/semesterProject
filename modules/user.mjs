@@ -3,12 +3,12 @@ import DBManager from "./storageManager.mjs";
 
 class User {
 
-  constructor() {
+  constructor(email, pswHash, name, id) {
     ///TODO: Are these the correct fields for your project?
-    this.email;
-    this.pswHash;
-    this.name;
-    this.id;
+    this.email = email;
+    this.pswHash = pswHash;
+    this.name = name;
+    this.id = id;
   }
 
   async save() {
@@ -16,6 +16,7 @@ class User {
     /// TODO: What happens if the DBManager fails to complete its task?
 
     // We know that if a user object dos not have the ID, then it cant be in the DB.
+console.log(this.id);
     if (this.id == null) {
       return await DBManager.createUser(this);
     } else {
@@ -82,7 +83,6 @@ class User {
           success: false,
           message: "Invalid login credentials"
         }
-
       }
     } else {
 
