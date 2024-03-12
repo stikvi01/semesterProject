@@ -42,7 +42,7 @@ USER_API.post('/login', async (req, res, next) => {
         user.pswHash = pswHash;
         const loginResult = await user.login();
 
-        //console.log("User", loginResult);
+        
 
         if (loginResult.success) {
             const userInfo = loginResult.user;
