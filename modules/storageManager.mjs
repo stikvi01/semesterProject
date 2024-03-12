@@ -2,9 +2,6 @@ import pg from "pg";
 import logger from "./logging.mjs";
 import { HttpCodes } from "./httpCodes.mjs";
 
-
-/// TODO: is the structure / design of the DBManager as good as it could be?
-
 class DBManager {
 
     #credentials = {};
@@ -16,7 +13,6 @@ class DBManager {
         };
 
     }
-
 
     async updateUser(user) {
 
@@ -43,24 +39,17 @@ class DBManager {
 
     async deleteUser(user) {
         const client = new pg.Client(this.#credentials);
-    
         try {
             await client.connect();
             const output = await client.query('DELETE FROM "public"."Users" WHERE id = $1;', [user.id]);
-            // Check if the user got deleted if needed
             return true;
         } catch (error) {
             console.error("Error deleting user:", error);
-            throw error; // Handle or rethrow the error
-        } finally {
-            client.end(); // Always disconnect from the database.
+            throw error; 
+            client.end(); 
         }
     }
     
-
-
-    
-
     async createUser(user) {
 
         const client = new pg.Client(this.#credentials);
@@ -88,6 +77,7 @@ class DBManager {
         return user;
 
     }
+
     async get(user) {
         const client = new pg.Client(this.#credentials);
         user = null;
@@ -109,7 +99,6 @@ class DBManager {
         return user;
     }
 
-
     async loginUser(email, password) {
         const client = new pg.Client(this.#credentials);
         let user = null;
@@ -127,42 +116,49 @@ class DBManager {
         } finally {
             client.end();
         }
-    
         return user;
     }
 
     async getRecipe(ingredientList) {
         const client = new pg.Client(this.#credentials);
-        let recipes = [];
+        let  recipesFromDb= [];   
+        let  recipes= null;
     
         try {
             await client.connect();
             console.log('Connected to the database');
-    
+        
             for (const ingredient of ingredientList) {
-               
                 const queryText = 'SELECT * FROM "public"."ingredients" WHERE "name" LIKE $1';
                 const output = await client.query(queryText, [`%${ingredient}%`]);
-    
+        
                 console.log('Query executed successfully');
+        
+                for (const row of output.rows) {
+                    const recipeId = row.recipieId;
+                    const secondQueryText = 'SELECT * FROM "public"."recipies" WHERE "recipieId" = $1';
+                    const secondOutput = await client.query(secondQueryText, [recipeId]);
+        
+                    console.log('Second query executed successfully');
     
-               
-                recipes.push(output.rows);
-                console.log(recipes);
+                    recipes = secondOutput.rows;
+                }
+                recipesFromDb.push(output.rows);
+        
+                console.log(recipesFromDb);
             }
+        
         } catch (error) {
             console.error('Error in getRecipe:', error.stack);
-           
+        
             throw error;
         } finally {
             client.end();
             console.log('Disconnected from the database');
         }
-    
+        
         return recipes;
-    }
-    
-      
+    }    
 }    
 
 export default new DBManager(process.env.DB_CONNECTIONSTRING_PROD);

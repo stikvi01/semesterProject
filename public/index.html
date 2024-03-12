@@ -14,9 +14,29 @@
     <div id="container">
     </div>
 
-
     <script type="module">
+       //--------------- Declarations --------------//
+        await insertTemplatesFrom("templates.html")
 
+        const homePage = document.querySelector("#homePage");
+        const recipeContainer = document.querySelector("#recipeContainer");
+        const shoppinglist = document.querySelector("#shoppinglist");
+        const userLogIn = document.querySelector("#userLogIn");
+        const userSignIn = document.querySelector("#userSignIn");
+        const userSettings = document.querySelector("#userSettings");
+        const container = document.getElementById("container");
+        const btnAddIngredients = document.getElementById("btnAddIngredients");
+        const btnUserPage = document.getElementById("btnUserPage");
+        const btnHome = document.getElementById("btnHome");
+        const btnSignIn = document.getElementById("btnSignIn");
+        const btnCreateUser = document.getElementById("btnCreateUser");
+        const userCreate = document.querySelector("#userCreate");
+
+
+        const homePageContent = homePage.content.cloneNode(true);
+        container.appendChild(homePageContent);
+
+        //--------------- Functions --------------//
 
         async function postTo(url, data) {
             const header = {
@@ -28,7 +48,6 @@
             };
 
             const respon = await fetch(url, header);
-
             return respon;
 
         }
@@ -43,11 +62,10 @@
             };
 
             const respon = await fetch(url, header);
-
-
             return respon;
 
         }
+
         async function deleteUser(url) {
             const header = {
                 method: "DELETE",
@@ -62,8 +80,8 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-
                 return response;
+
             } catch (error) {
                 console.error("Error during delete request:", error);
                 throw error;
@@ -80,13 +98,11 @@
             };
 
             const respon = await fetch(url, header);
-
-
             return respon;
 
         }
+
         async function getRecipies(url, data) {
-            // Convert the array to a comma-separated string and append it to the URL
             const dataPrams = data.join(',');
             const paramUrl = `${url}?ingredients=${dataPrams}`;
 
@@ -99,31 +115,8 @@
 
             const response = await fetch(paramUrl, header);
             console.log(header);
-          
             return response;
         }
-
-
-        await insertTemplatesFrom("templates.html")
-
-        const homePage = document.querySelector("#homePage");
-        const recipeContainer = document.querySelector("#recipeContainer");
-        const shoppinglist = document.querySelector("#shoppinglist");
-        const userLogIn = document.querySelector("#userLogIn");
-        const userSignIn = document.querySelector("#userSignIn");
-        const userSettings = document.querySelector("#userSettings");
-        const container = document.getElementById("container");
-        const btnAddIngredients = document.getElementById("btnAddIngredients");
-        const btnCreateShoppingList = document.getElementById("btnCreateShoppingList");
-        const btnUserPage = document.getElementById("btnUserPage");
-        const btnHome = document.getElementById("btnHome");
-        const btnSignIn = document.getElementById("btnSignIn");
-        const btnCreateUser = document.getElementById("btnCreateUser");
-        const userCreate = document.querySelector("#userCreate");
-
-
-        const homePageContent = homePage.content.cloneNode(true);
-        container.appendChild(homePageContent);
 
 
         async function insertTemplatesFrom(source) {
@@ -131,6 +124,7 @@
             document.body.insertAdjacentHTML("beforeend", templates);
         }
 
+        //--------------- Event and Buttons --------------//
 
         container.addEventListener("click", async function (evt) {
             if (evt.target.id === "btnAddIngredients") {
@@ -142,19 +136,32 @@
                 btnGenerateRecipe.onclick = async function (evt) {
                     const ingredientsArray = Array.from(ingredientsList.children).map(item => item.textContent);
 
-        
+
 
                     const response = await getRecipies("/recipie", ingredientsArray)
                     console.log(response.status);
                     const responseData = await response.json();
-                    console.log(responseData);
+                    console.log(responseData.recipies);
 
+
+                    container.innerHTML = "";
+                    const recipeContainerContent = recipeContainer.content.cloneNode(true);
+                    container.appendChild(recipeContainerContent);
+                    const recipieSugestionContainer = document.querySelector("#recipieSugestionContainer");
+                    for (const recipe of responseData.recipies) {
+                        let displayRecipie = document.createElement("div");
+                        displayRecipie.innerHTML = `
+                             <h2>${recipe.name}</h2>  
+                             <p>${recipe.desc}</p>   
+                                 
+                             `;
+                        const btnCreateShoppingList = document.getElementById("btnCreateShoppingList");
+                        displayRecipie.appendChild(btnCreateShoppingList)
+                        recipieSugestionContainer.appendChild(displayRecipie);
+
+                    }
                 }
 
-            } else if (evt.target.id === "btnGenerateRecipe") {
-                // container.innerHTML = "";
-                // const recipeContainerContent = recipeContainer.content.cloneNode(true);
-                // container.appendChild(recipeContainerContent);
             } else if (evt.target.id === "btnUserPage") {
                 let userId = localStorage.getItem("userId");
                 if (!userId) {
@@ -247,7 +254,6 @@
                 const homePageContent = homePage.content.cloneNode(true);
                 container.appendChild(homePageContent);
             }
-
         });
 
 

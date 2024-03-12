@@ -3,8 +3,7 @@ import User from "../modules/user.mjs";
 import { HttpCodes } from "../modules/httpCodes.mjs";
 
 const USER_API = express.Router();
-USER_API.use(express.json()); // This makes it so that express parses all incoming payloads as JSON for this route.
-
+USER_API.use(express.json());
 
 USER_API.get('/:id', async (req, res, next) => {
     const { id } = req.body
@@ -28,11 +27,6 @@ USER_API.get('/:id', async (req, res, next) => {
         res.status(HttpCodes.ServerSideErrorRespons.InternalServerError).send("Internal server error");
     }
 })
-    // Tip: All the information you need to get the id part of the request can be found in the documentation 
-    // https://expressjs.com/en/guide/routing.html (Route parameters)
-
-    /// TODO: 
-    // Return user object
 
 
 USER_API.post('/login', async (req, res, next) => {
@@ -67,13 +61,8 @@ USER_API.post('/login', async (req, res, next) => {
     }
 });
 
-
-
 USER_API.post('/', async (req, res, next) => {
 
-    // This is using javascript object destructuring.
-    // Recomend reading up https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment#syntax
-    // https://www.freecodecamp.org/news/javascript-object-destructuring-spread-operator-rest-parameter/
     const { name, email, pswHash } = req.body;
 
     if (name != "" && email != "" && pswHash != "") {
@@ -120,6 +109,5 @@ USER_API.delete('/:id', async (req, res) => {
         res.status(HttpCodes.ServerSideErrorRespons.InternalServerError).send("Internal server error");
     }
 });
-
 
 export default USER_API
