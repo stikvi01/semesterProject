@@ -9,7 +9,7 @@ class DBManager {
     constructor(connectionString) {
         this.#credentials = {
             connectionString: process.env.DB_CONNECTIONSTRING_PROD,
-            ssl: (process.env.DB_SSL === "true") ? process.env.DB_SSL : false
+            ssl: (process.env.DB_SSL === "true") ? true : false
         };
 
     }
@@ -22,11 +22,7 @@ class DBManager {
             await client.connect();
             const output = await client.query('UPDATE "public"."Users" set "name" = $1, "email" = $2, "pswHash" = $3 where id = $4;', [user.name, user.email, user.pswHash, user.id]);
             
-            // Client.Query returns an object of type pg.Result (https://node-postgres.com/apis/result)
-            // Of special intrest is the rows and rowCount properties of this object.
-
-            //TODO Did we update the user?
-
+           
         } catch (error) {
             //TODO : Error handling?? Remember that this is a module seperate from your server 
         } finally {
