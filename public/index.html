@@ -22,6 +22,7 @@
 
         //templates
         const homePage = document.querySelector("#homePage");
+        const recipeSugestionContainer = document.querySelector("#recipeSugestionContainer");
         const recipeContainer = document.querySelector("#recipeContainer");
         const shoppinglist = document.querySelector("#shoppinglist");
         const userLogIn = document.querySelector("#userLogIn");
@@ -31,7 +32,6 @@
         const userCreate = document.querySelector("#userCreate");
 
         //buttons
-
         const btnAddIngredients = document.getElementById("btnAddIngredients");
         const btnUserPage = document.getElementById("btnUserPage");
         const btnHome = document.getElementById("btnHome");
@@ -152,7 +152,7 @@
             if (evt.target.id === "btnAddIngredients") {
                 let fridgeInp = document.getElementById("fridgeInp").value;
                 let ingredients = document.createElement("li");
-                ingredients.innerHTML = fridgeInp;
+                ingredients.innerHTML = fridgeInp.toLowerCase();
                 ingredientsList.appendChild(ingredients);
                 const btnGenerateRecipe = document.getElementById("btnGenerateRecipe");
 
@@ -162,22 +162,65 @@
                     console.log(response.status);
                     const responseData = await response.json();
                     console.log(responseData.recipies);
+                    const uniqueRecipeNames = [];
                     container.innerHTML = "";
-                    const recipeContainerContent = recipeContainer.content.cloneNode(true);
-                    container.appendChild(recipeContainerContent);
-                    const recipieSugestionContainer = document.querySelector("#recipieSugestionContainer");
-                    for (const recipe of responseData.recipies) {
-                        let displayRecipie = document.createElement("div");
-                        displayRecipie.innerHTML = `
-                             <h2>${recipe.name}</h2>  
-                             <p>${recipe.desc}</p>   
-                                 
-                             `;
-                        const btnCreateShoppingList = document.getElementById("btnCreateShoppingList");
-                        displayRecipie.appendChild(btnCreateShoppingList)
-                        recipieSugestionContainer.appendChild(displayRecipie);
+                    const recipeSugestionContainerContent = recipeSugestionContainer.content.cloneNode(true);
+                    container.appendChild(recipeSugestionContainerContent);
+                    const recipieSugestionContainerContent = document.querySelector("#recipieSugestionContainerContent");
 
+
+                    for (const recipe of responseData.recipies) {
+                        let displayRecipieSugestions = document.createElement("div");
+                        if (!uniqueRecipeNames.includes(recipe.name)) {
+                            displayRecipieSugestions.innerHTML = `
+                            <hr>
+                            <h2>${recipe.name}</h2>  
+                            <p>${recipe.desc}</p>   
+                             `;
+                        }
+                        const btnLookRecipe = document.createElement("button")
+                        btnLookRecipe.innerHTML = "Se oppsrift";
+                        displayRecipieSugestions.appendChild(btnLookRecipe);
+
+                        recipieSugestionContainerContent.appendChild(displayRecipieSugestions);
+                        uniqueRecipeNames.push(recipe.name);
+                        console.log(recipe);
+                        btnLookRecipe.addEventListener("click", function (evt) {
+                            container.innerHTML = "";
+                            const recipeContainerContent = recipeContainer.content.cloneNode(true);
+                            container.appendChild(recipeContainerContent)
+                            const recipeContent = document.querySelector("#recipeContent");
+                            const json = JSON.parse(recipe.ingridents)
+                            const jsonSteps =JSON.parse(recipe.steps)
+                            console.log(json);
+                            console.log(jsonSteps);
+                            let displayRecipie = document.createElement("div");
+                            displayRecipie.innerHTML = `
+                            <h1>${recipe.name}</h1>  
+                            <h3>Ingredienser</h3> 
+                             `;
+                             for (const ing of json){
+                                displayRecipie.innerHTML += `
+                            <li>${ing.amount} ${ing.unit} ${ing.ingredient} </li>  
+                             `;
+                             }
+                             displayRecipie.innerHTML += `
+                            <h3>Utførelse</h3>  
+                            
+                             `;
+                             for (const step of jsonSteps){
+                                displayRecipie.innerHTML += `
+                            <li>${step.step}  </li>  
+                            <br>
+                             `;
+                             }
+                             
+                            recipeContent.appendChild(displayRecipie)
+                            
+
+                        })
                     }
+
                 }
 
             } else if (evt.target.id === "btnUserPage") {
@@ -430,6 +473,9 @@
             text-align: center;
             margin: 10px 0;
             flex-grow: 1;
+        }
+        li {
+            list-style-type: none;
         }
     </style>
 
