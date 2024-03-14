@@ -33,7 +33,7 @@ USER_API.post('/login', async (req, res, next) => {
     const { email, pswHash } = req.body;
 
     if (!email || !pswHash) {
-        return res.status(HttpCodes.ClientSideErrorRespons.BadRequest).send("Missing data fields");
+        return res.status(HttpCodes.ClientSideErrorRespons.BadRequest).send("Missing data fields").end();
     }
 
     try {
@@ -55,7 +55,7 @@ USER_API.post('/login', async (req, res, next) => {
             res.status(HttpCodes.ClientSideErrorRespons.Unauthorized).send("Invalid login credentials");
         }
     } catch (error) {
-        // Handle other errors
+        
         console.error("Unexpected error:", error);
         res.status(HttpCodes.ServerSideErrorRespons.InternalServerError).send("Internal server error");
     }

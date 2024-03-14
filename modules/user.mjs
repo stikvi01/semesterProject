@@ -75,7 +75,6 @@ console.log(this.id);
             id: this.id,
             name: this.name,
             email: this.email,
-            // Include any other relevant user information here
           }
         }
       }else{
