@@ -1,8 +1,9 @@
 <template id="homePage">
     <img src="fridge.png" alt="fridge icon">
     <h1>Hva er i kjøleskapet?</h1>
-    <input type="text" id="fridgeInp" placeholder="Egg">
+    <input type="text" id="fridgeInp" placeholder="Melk">
     <button id="btnAddIngredients">Legg til ingredienser</button>
+    <p id="removeIngridientTekst">Klikk på ingrediensen for å fjerne den</p>
     <ul id="ingredientsList"></ul> 
     <br>
     <button id="btnGenerateRecipe">Generer middags forslag</button>
@@ -11,8 +12,9 @@
 
 <template id="recipeSugestionContainer">
     <h1>Middagsforslag</h1>
+    <p id="recipeSugestionErrorMsg"></p>
     <div id="recipieSugestionContainerContent"></div>
-    <button id="btnUserPage">👤</button>
+    <button id="btnHome">Hjem</button>
 </template>
 
 <template id="recipeContainer">
@@ -33,7 +35,7 @@
     <input type="email" id="userEmail" placeholder="email">
     <input type="password" name="" id="userPswHash" placeholder="Passord">
     <button id="btnLogIn">Logg inn</button>
-    <br>
+    <p id="logInErrorMsg"></p>
     <br>
     <button id="btnSignIn">Lag en ny bruker</button>
     <button id="btnHome">Hjem</button>
@@ -56,6 +58,7 @@
         <input type="text" id="name"placeholder="Brukernavn"><br>
         <input type="email" id="email"placeholder="Email"><br />
         <input type="password" id="pswHash"placeholder="Passord"><br />
+        <p id="createUserErrorMsg"></p>
         <button id="btnCreateUserSendData">Lag bruker</button>
     </div>
 </template>
@@ -65,6 +68,8 @@
         <input type="text" id="changeUserName"><br>
         <input type="email" id="changeEmailName"><br />
         <input type="password" id="changePswHash"placeholder="Passord"><br />
+        <p id="updateUserErrorMsg"></p>
         <button id="btnUpdateUserSendData">Endre Bruker</button>
+    
     </div>
 </template>

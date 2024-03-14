@@ -37,7 +37,8 @@
         const btnHome = document.getElementById("btnHome");
         const btnSignIn = document.getElementById("btnSignIn");
         const btnCreateUser = document.getElementById("btnCreateUser");
-        const btnUpdateUser = document.getElementById("btnUpdateUser")
+        const btnUpdateUser = document.getElementById("btnUpdateUser");
+        const btnBack = document.getElementById("btnBack");
 
 
 
@@ -136,7 +137,6 @@
             };
 
             const response = await fetch(paramUrl, header);
-            console.log(header);
             return response;
         }
 
@@ -150,79 +150,82 @@
 
         container.addEventListener("click", async function (evt) {
             if (evt.target.id === "btnAddIngredients") {
-                let fridgeInp = document.getElementById("fridgeInp").value;
-                let ingredients = document.createElement("li");
-                ingredients.innerHTML = fridgeInp.toLowerCase();
-                ingredientsList.appendChild(ingredients);
-                const btnGenerateRecipe = document.getElementById("btnGenerateRecipe");
 
+                let fridgeInp = document.getElementById("fridgeInp").value;
+
+                if (fridgeInp != "") {
+                    let ingredients = document.createElement("li");
+                    ingredients.innerHTML = fridgeInp.toLowerCase();
+                    ingredientsList.appendChild(ingredients);
+                    ingredients.addEventListener("click", function (evt) {
+                        ingredientsList.removeChild(ingredients);
+                    })
+                    document.getElementById("fridgeInp").value = "";
+                }
+
+                const btnGenerateRecipe = document.getElementById("btnGenerateRecipe");
                 btnGenerateRecipe.onclick = async function (evt) {
+                    
                     const ingredientsArray = Array.from(ingredientsList.children).map(item => item.textContent);
                     const response = await getRecipies("/recipie", ingredientsArray)
-                    console.log(response.status);
-                    const responseData = await response.json();
-                    console.log(responseData.recipies);
+                    console.log(response);
+                   
+
                     const uniqueRecipeNames = [];
+
                     container.innerHTML = "";
                     const recipeSugestionContainerContent = recipeSugestionContainer.content.cloneNode(true);
                     container.appendChild(recipeSugestionContainerContent);
                     const recipieSugestionContainerContent = document.querySelector("#recipieSugestionContainerContent");
-
-
-                    for (const recipe of responseData.recipies) {
-                        let displayRecipieSugestions = document.createElement("div");
-                        if (!uniqueRecipeNames.includes(recipe.name)) {
-                            displayRecipieSugestions.innerHTML = `
-                            <hr>
-                            <h2>${recipe.name}</h2>  
-                            <p>${recipe.desc}</p>   
-                             `;
-                        }
-                        const btnLookRecipe = document.createElement("button")
-                        btnLookRecipe.innerHTML = "Se oppsrift";
-                        displayRecipieSugestions.appendChild(btnLookRecipe);
-
-                        recipieSugestionContainerContent.appendChild(displayRecipieSugestions);
-                        uniqueRecipeNames.push(recipe.name);
-                        console.log(recipe);
-                        btnLookRecipe.addEventListener("click", function (evt) {
-                            container.innerHTML = "";
-                            const recipeContainerContent = recipeContainer.content.cloneNode(true);
-                            container.appendChild(recipeContainerContent)
-                            const recipeContent = document.querySelector("#recipeContent");
-                            const json = JSON.parse(recipe.ingridents)
-                            const jsonSteps =JSON.parse(recipe.steps)
-                            console.log(json);
-                            console.log(jsonSteps);
-                            let displayRecipie = document.createElement("div");
-                            displayRecipie.innerHTML = `
-                            <h1>${recipe.name}</h1>  
-                            <h3>Ingredienser</h3> 
-                             `;
-                             for (const ing of json){
-                                displayRecipie.innerHTML += `
-                            <li>${ing.amount} ${ing.unit} ${ing.ingredient} </li>  
-                             `;
-                             }
-                             displayRecipie.innerHTML += `
-                            <h3>Utførelse</h3>  
-                            
-                             `;
-                             for (const step of jsonSteps){
-                                displayRecipie.innerHTML += `
-                            <li>${step.step}  </li>  
-                            <br>
-                             `;
-                             }
-                             
-                            recipeContent.appendChild(displayRecipie)
-                            
-
-                        })
+                    const recipeSugestionErrorMsg = document.getElementById("recipeSugestionErrorMsg");
+                    if (response.status != 200){
+                        recipeSugestionErrorMsg.innerHTML = "Fant ingen oppskrift med denne ingrediensen."
+                        return;
                     }
 
-                }
+                    const responseData = await response.json();
 
+                    for (const recipe of responseData.recipies) {
+                        if (!uniqueRecipeNames.includes(recipe.name)) {
+
+                            let displayRecipieSugestions = document.createElement("div");
+                            displayRecipieSugestions.setAttribute("id", "recipeSuggestionDiv");
+                            displayRecipieSugestions.innerHTML = `
+                            <h2>${recipe.name}</h2>  
+                            <p>${recipe.desc}</p> `;
+
+                            const btnLookRecipe = document.createElement("button");
+                            btnLookRecipe.innerHTML = "Se oppsrift";
+                            displayRecipieSugestions.appendChild(btnLookRecipe);
+                            recipieSugestionContainerContent.appendChild(displayRecipieSugestions);
+                            uniqueRecipeNames.push(recipe.name);
+
+                            btnLookRecipe.addEventListener("click", function (evt) {
+                                container.innerHTML = "";
+                                const recipeContainerContent = recipeContainer.content.cloneNode(true);
+                                container.appendChild(recipeContainerContent)
+
+                                const recipeContent = document.querySelector("#recipeContent");
+                                const json = JSON.parse(recipe.ingridents)
+                                const jsonSteps = JSON.parse(recipe.steps)
+
+                                let displayRecipie = document.createElement("div");
+                                displayRecipie.innerHTML = `
+                                <h1>${recipe.name}</h1>  
+                                <h3>Ingredienser</h3> `;
+
+                                for (const ing of json) {
+                                    displayRecipie.innerHTML += `<li>${ing.amount} ${ing.unit} ${ing.ingredient} </li> `;
+                                };
+                                displayRecipie.innerHTML += `<h3>Utførelse</h3>`;
+                                for (const step of jsonSteps) {
+                                    displayRecipie.innerHTML += `<li>${step.step}  </li> <br>`;
+                                };
+                                recipeContent.appendChild(displayRecipie)
+                            });
+                        };
+                    };
+                };
             } else if (evt.target.id === "btnUserPage") {
                 let userId = localStorage.getItem("userId");
                 if (!userId) {
@@ -235,11 +238,18 @@
                     btnLogIn.onclick = async function (e) {
                         const email = document.getElementById("userEmail").value;
                         let pswHash = document.getElementById("userPswHash").value;
+                        const logInErrorMsg = document.getElementById("logInErrorMsg");
                         pswHash = await sha256(pswHash);
                         const user = { email, pswHash };
-                        console.log(user);
+
                         const respon = await logIn("/user/login", user);
                         console.log(respon);
+
+                        if (respon.status !== 200) {
+                            logInErrorMsg.innerHTML = "Feil brukernavn eller passord!";
+                            return;
+                        };
+
                         const responseData = await respon.json();
                         console.log(responseData);
 
@@ -269,6 +279,7 @@
                             const homePageContent = homePage.content.cloneNode(true);
                             container.appendChild(homePageContent);
 
+
                         }
                     };
                 } else {
@@ -286,12 +297,12 @@
                 container.innerHTML = "";
                 const homePageContent = homePage.content.cloneNode(true);
                 container.appendChild(homePageContent);
-            }
-            else if (evt.target.id === "btnSignIn") {
+            } else if (evt.target.id === "btnSignIn") {
                 container.innerHTML = "";
                 const userSignInContent = userCreate.content.cloneNode(true);
                 container.appendChild(userSignInContent);
                 const createUserButton = document.getElementById("btnCreateUserSendData");
+                const createUserErrorMsg = document.getElementById("createUserErrorMsg");
                 createUserButton.onclick = async function (e) {
                     const name = document.getElementById("name").value;
                     const email = document.getElementById("email").value;
@@ -300,6 +311,10 @@
                     const user = { name, email, pswHash };
                     const respon = await postTo("/user", user);
                     console.log(respon);
+                    if (respon.status != 200) {
+                        createUserErrorMsg.innerHTML = "Pass på at alle feltene er fylt ut!"
+                        return;
+                    }
                     container.innerHTML = "";
                     const homePageContent = homePage.content.cloneNode(true);
                     container.appendChild(homePageContent);
@@ -320,6 +335,7 @@
                 const changeEmailName = document.getElementById("changeEmailName");
                 const btnUpdateUserSendData = document.getElementById("btnUpdateUserSendData");
                 const changePswHash = document.getElementById("changePswHash");
+                const updateUserErrorMsg = document.getElementById("updateUserErrorMsg");
 
                 const name = localStorage.getItem("userName");
                 const email = localStorage.getItem("userEmail");
@@ -332,22 +348,27 @@
                     const name = changeUserName.value;
                     const email = changeEmailName.value;
                     let pswHash = changePswHash.value;
-                    pswHash = await sha256(pswHash);
                     const id = userId
-                    if (pswHash != "") {
-                        const user = { name, email, pswHash, id };
-                        console.log(user);
-                        const respon = await updateUser(`/user/${id}`, user);
-                        const responseData = await respon.json();
-                        console.log(responseData);
-                        const userName = name
-                        const userEmail = email
-                        localStorage.setItem("userName", userName);
-                        localStorage.setItem("userEmail", userEmail);
-                        container.innerHTML = "";
-                        const homePageContent = homePage.content.cloneNode(true);
-                        container.appendChild(homePageContent);
-                    }
+
+                    if (!pswHash) {
+                        updateUserErrorMsg.innerHTML = "Pass på at passord er med!";
+                        return;
+                    };
+                    pswHash = await sha256(pswHash);
+                    const user = { name, email, pswHash, id };
+                    console.log(user);
+                    const respon = await updateUser(`/user/${id}`, user);
+                    const responseData = await respon.json();
+                    console.log(responseData);
+                    const userName = name
+                    const userEmail = email
+                    localStorage.setItem("userName", userName);
+                    localStorage.setItem("userEmail", userEmail);
+                    // container.innerHTML = "";
+                    // const homePageContent = homePage.content.cloneNode(true);
+                    // container.appendChild(homePageContent);
+
+
                 };
 
             }
@@ -393,6 +414,15 @@
             margin: 10px 0;
         }
 
+        #recipeSuggestionDiv {
+            background-color: #e8c59c;
+            border-bottom: 1px;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 15px;
+            margin: 10px;
+        }
+
         #btnAddIngredients {
             color: gray;
             background-color: #e8c59c;
@@ -402,7 +432,6 @@
             border-radius: 8px;
             font-size: 20px;
             text-align: center;
-            margin: 10px 0;
         }
 
         button {
@@ -427,6 +456,11 @@
             font-size: 20px;
             text-align: center;
             margin: 10px 0;
+        }
+
+        #removeIngridientTekst {
+            color: #c5151c;
+            ;
         }
 
         #btnUserPage {
@@ -474,6 +508,7 @@
             margin: 10px 0;
             flex-grow: 1;
         }
+
         li {
             list-style-type: none;
         }
