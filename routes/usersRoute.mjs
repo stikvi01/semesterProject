@@ -69,8 +69,6 @@ USER_API.post('/', async (req, res, next) => {
         let user = new User();
         user.name = name;
         user.email = email;
-
-        ///TODO: Do not save passwords.
         user.pswHash = pswHash;
 
         ///TODO: Does the user exist?
@@ -93,6 +91,9 @@ USER_API.post('/', async (req, res, next) => {
 USER_API.put('/:id', async (req, res) => {
     const { name, email, pswHash, id } = req.body;
     let user = new User(); //TODO: The user info comes as part of the request 
+    console.log(email);
+    console.log(user.email);
+    
     user.name = name;
     user.email = email;
     user.pswHash = pswHash;
