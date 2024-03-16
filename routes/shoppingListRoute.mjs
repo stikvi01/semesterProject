@@ -34,7 +34,7 @@ SHOPPINGLIST_API.post('/makelist', async (req, res) => {
 });
 SHOPPINGLIST_API.get('/getlist', async (req, res, next) => {
     const userId  = req.query.userId;
-    console.log(userId);
+    console.log("hello"+userId);
     if (!userId) {
         return res.status(HttpCodes.ClientSideErrorRespons.BadRequest).send("Missing data").end();
     }
@@ -61,12 +61,33 @@ SHOPPINGLIST_API.get('/getlist', async (req, res, next) => {
         res.status(HttpCodes.ServerSideErrorRespons.InternalServerError).send("Internal server error");
     }
 });
+
+SHOPPINGLIST_API.put('/:id', async (req, res) => {
+    const { items, id} = req.body;
+    let shoppingList = new ShoppingList(); 
+    
+    
+    shoppingList.items = items 
+    shoppingList.id = id
+
+    let exists = false;
+
+    if (!exists) {
+
+        shoppingList = await shoppingList.save();
+        res.status(HttpCodes.SuccesfullRespons.Ok).json(JSON.stringify(shoppingList)).end();
+    } else {
+        res.status(HttpCodes.ClientSideErrorRespons.BadRequest).end();
+    }
+
+});
+
 SHOPPINGLIST_API.delete('/delete', async (req, res) => {
     console.log(req.query);
     console.log(req.query.shoppinglistId);
     const { shoppinglistId } = req.query;
     const shoppingList = new ShoppingList();
-    shoppingList.shoppinglistId = shoppinglistId;
+    shoppingList.id = shoppinglistId;
    
     try {
         console.log(shoppingList)

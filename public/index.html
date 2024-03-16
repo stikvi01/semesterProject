@@ -185,6 +185,21 @@
             return respon
         }
 
+        async function updateShoppinglist(url, data) {
+            
+            const header = {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            };
+
+            const respon = await fetch(url, header);
+            return respon;
+        }
+
+
 
 
         async function insertTemplatesFrom(source) {
@@ -499,25 +514,52 @@
                         const listItem = document.createElement("li");
                         listItem.innerHTML = item;
                         bulletpoints.appendChild(listItem);
+                        listItem.addEventListener("click", function (evt) {
+                            bulletpoints.removeChild(listItem);
+                            const index = listContent.indexOf(item);
+                            if (index !== -1) {
+                                listContent.splice(index, 1);
+                            }
+                        })
                     };
                     const btnDeleteList = document.createElement("button")
-                    btnDeleteList.innerHTML = "Slett liste"
+                    btnDeleteList.innerHTML = "🗑️"
+
+                    const btnUpdateList = document.createElement("button")
+                    btnUpdateList.innerHTML = "Lagre listen"
+
+                    listItemsContainer.appendChild(bulletpoints);
+                    listItemsContainer.appendChild(btnUpdateList);
+                    listItemsContainer.appendChild(btnDeleteList);
+
+
+                    collapsibleDiv.appendChild(listName);
+                    collapsibleDiv.appendChild(listItemsContainer);
+                    shoppinglistPageContainer.appendChild(collapsibleDiv);
+
+
 
                     btnDeleteList.addEventListener("click", async function (evt) {
                         const shoppinglistId = list.shoppinglistId;
                         console.log(shoppinglistId);
                         const respon = await deleteShoppinglist("/shoppingList/delete", shoppinglistId);
                         console.log(respon);
-                        container.innerHTML = "";
-                        const savedShoppinglistsPageContent = savedShoppinglistsPage.content.cloneNode(true);
-                        container.appendChild(savedShoppinglistsPageContent);
+                        shoppinglistPageContainer.removeChild(collapsibleDiv);
+
                     })
 
-                    listItemsContainer.appendChild(bulletpoints);
-                    listItemsContainer.appendChild(btnDeleteList);
-                    collapsibleDiv.appendChild(listName);
-                    collapsibleDiv.appendChild(listItemsContainer);
-                    shoppinglistPageContainer.appendChild(collapsibleDiv);
+                    btnUpdateList.addEventListener("click", async function (evt) {
+                        const items = JSON.stringify(listContent);
+                        const id = list.id; 
+                        const shoppingList = {items, id}
+               
+                        const respon = await updateShoppinglist(`/shoppingList/${id}`, shoppingList);
+                        const responseData = await respon.json();
+                        console.log(responseData);
+
+                    })
+
+
                 }
 
             }

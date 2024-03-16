@@ -181,29 +181,23 @@ class DBManager {
         return shoppingList;
 
     }
-    async updateShoppinglist(user) {
-
+    async updateShoppinglist(shoppingList) {
         const client = new pg.Client(this.#credentials);
 
         try {
-            const sql = 'INSERT INTO "public"."Users"("name", "email", "pswHash") VALUES($1::TEXT, $2::TEXT, $3::TEXT) RETURNING id;';
-            const parms = [user.name, user.email, user.pswHash];
             await client.connect();
-            const output = await client.query(sql, parms);
+            const output = await client.query('UPDATE "public"."shoppinglist" set "items" = $1 where "id" = $2;', [shoppingList.items, shoppingList.id]);
 
-            if (output.rows.length == 1) {
-                user.id = output.rows[0].id;
-            }
 
         } catch (error) {
-            console.error(error);
-            throw error;
-            return false;
+            console.error('Error in update user:', error.stack);
+            //TODO : Error handling?? Remember that this is a module seperate from your server 
         } finally {
-            client.end();
+            client.end(); // Always disconnect from the database.
         }
 
-        return user;
+        return shoppingList;
+
     }
     async deleteShoppinglist(shoppingList) {
 
@@ -211,8 +205,8 @@ class DBManager {
         try {
             await client.connect();
             console.log('Connected to the database');
-            const sql = 'DELETE FROM "public"."shoppinglist" WHERE "shoppinglistId" = $1;'
-            const params = [shoppingList.shoppinglistId];
+            const sql = 'DELETE FROM "public"."shoppinglist" WHERE "id" = $1;'
+            const params = [shoppingList.id];
             const output = await client.query(sql, params);
             console.log('Query executed successfully');
             return true;

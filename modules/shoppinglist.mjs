@@ -3,15 +3,15 @@ import DBManager from "./storageManager.mjs";
 class ShoppingList {
 
   constructor(shoppinglistId, items, userId) {
-    this.shoppinglistId = shoppinglistId;
+    this.id = shoppinglistId;
     this.items = items;
     this.userId = userId;
 
   }
 
   async save() {
-    console.log(this.shoppinglistId);
-    if (this.shoppinglistId == null) {
+    console.log("this is id"+this.id);
+    if (this.id == null) {
       return await DBManager.createShoppinglist(this);
     } else {
       return await DBManager.updateShoppinglist(this);
@@ -19,7 +19,7 @@ class ShoppingList {
   }
   async delete() {
 
-    if (this.shoppinglistId != null) {
+    if (this.id != null) {
       return await DBManager.deleteShoppinglist(this);
     }
 
