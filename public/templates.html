@@ -19,15 +19,20 @@
 
 <template id="recipeContainer">
     <div id="recipeContent"></div>
+    <button id="btnShoppinglist">Lag Handleliste</button>
     <button id="btnHome">Hjem</button>
 </template>
 
-<template id="shoppinglist">
+<template id="shoppinglistPage">
     <h1>Handleliste</h1>
+    <div id="shoppinglistContainer"></div>
+    <input type="text" placeholder="Legg til" id="itemShoppingListInp">
+    <button id="btnAddItemShoppinglist">Legg til mer i handlelisten</button>
+    <button id="btnSaveShoppinglist">Lagre handlelisten</button>
+    <p id="shoppingListMsg"></p>
     <button id="btnHome">Hjem</button>
-    <button id="btnUserPage">bruker</button>
-    <br>
-    <button id="btnGenerateRecipe">Generer middags forslag</button>
+    <button id="btnUserPage">👤</button>
+
 </template>
 
 <template id="userLogIn">
@@ -48,6 +53,7 @@
     <h3 id="userEmailValue">Email: </h3>
     <button id="btnUpdateUser">Endre bruker</button>
     <button id="btnDeleteUser">Slett bruker</button>
+    <button id="btnToSavedShoppinglist">Handlelister</button>
     <button id="btnHome">Hjem</button>
     <button id="btnLogOut">Logg ut</button>
 </template>
@@ -70,6 +76,14 @@
         <input type="password" id="changePswHash"placeholder="Passord"><br />
         <p id="updateUserErrorMsg"></p>
         <button id="btnUpdateUserSendData">Endre Bruker</button>
+    
+    </div>
+</template>
+<template id="savedShoppinglistsPage">
+    <div>
+        <h1>Handlelister</h1>
+      <div id="shoppinglistPageContainer"></div>
+        <button id="btnHome">Hjem</button>
     
     </div>
 </template>
