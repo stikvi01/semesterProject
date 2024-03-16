@@ -200,55 +200,53 @@ class DBManager {
             throw error;
             return false;
         } finally {
-            client.end(); // Always disconnect from the database.
+            client.end();
         }
 
         return user;
-
     }
-    async deleteShoppinglist(user) {
+    async deleteShoppinglist(shoppingList) {
 
         const client = new pg.Client(this.#credentials);
-
         try {
-            const sql = 'INSERT INTO "public"."Users"("name", "email", "pswHash") VALUES($1::TEXT, $2::TEXT, $3::TEXT) RETURNING id;';
-            const parms = [user.name, user.email, user.pswHash];
             await client.connect();
-            const output = await client.query(sql, parms);
-
-            if (output.rows.length == 1) {
-                user.id = output.rows[0].id;
-            }
-
+            console.log('Connected to the database');
+            const sql = 'DELETE FROM "public"."shoppinglist" WHERE "shoppinglistId" = $1;'
+            const params = [shoppingList.shoppinglistId];
+            const output = await client.query(sql, params);
+            console.log('Query executed successfully');
+            return true;
         } catch (error) {
-            console.error(error);
+            console.error("Error deleting user:", error);
             throw error;
             return false;
         } finally {
-            client.end(); // Always disconnect from the database.
+            client.end();
+            console.log('Disconnected from the database');
+
         }
 
-        return user;
+    }
 
-    } async getShoppinglist(userId) {
+    async getShoppinglist(userId) {
         const client = new pg.Client(this.#credentials);
         let shoppingList = [];
-    
+
         try {
             await client.connect();
             console.log('Connected to the database');
             const sql = 'SELECT * FROM "public"."shoppinglist" WHERE "userId" LIKE $1';
             const params = [userId];
             const output = await client.query(sql, params);
-    
+
             console.log('Query executed successfully');
-    
+
             if (output.rows.length > 0) {
-                shoppingList = output.rows; 
+                shoppingList = output.rows;
             } else {
                 console.log('No shopping list found for the user');
             }
-            
+
             console.log("this is shoppinglist", shoppingList); // Log shoppingList
             console.log("this is output", output); // Log output
         } catch (error) {
@@ -258,10 +256,10 @@ class DBManager {
             client.end();
             console.log('Disconnected from the database');
         }
-    
+
         return shoppingList;
     }
-    
+
 
 }
 

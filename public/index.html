@@ -115,7 +115,7 @@
                 },
             };
 
-           
+            const response = await fetch(url, header);
         }
 
         async function getUser(url, data) {
@@ -171,6 +171,20 @@
             const respon = await fetch(paramUrl, header);
             return respon;
         }
+
+        async function deleteShoppinglist(url, data) {
+            const paramUrl = `${url}?shoppinglistId=${data}`;
+            const header = {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            };
+
+            const respon = await fetch(paramUrl, header);
+            return respon
+        }
+
 
 
         async function insertTemplatesFrom(source) {
@@ -280,7 +294,8 @@
                                     });
 
                                     btnSaveShoppinglist.addEventListener("click", async function (evt) {
-                                        const shoppinglistArray = Array.from(shoppinglistContainer.children).map(item => item.textContent);
+                                        let shoppinglistArray = Array.from(shoppinglistContainer.children).map(item => item.textContent);
+                                        shoppinglistArray = JSON.stringify(shoppinglistArray);
                                         const userId = localStorage.getItem("userId");
                                         const items = shoppinglistArray;
                                         const shoppinglist = { userId, items };
@@ -444,17 +459,69 @@
                 };
 
             } else if (evt.target.id === "btnToSavedShoppinglist") {
-                const userId = localStorage.getItem("userId")
-                const respon = await getShoppinglist("/shoppingList/getlist", userId );
-                console.log(respon);
-
+                const userId = localStorage.getItem("userId");
+                const respon = await getShoppinglist("/shoppingList/getlist", userId);
                 const responseData = await respon.json();
-                        console.log(responseData);
+
+
                 container.innerHTML = "";
                 const savedShoppinglistsPageContent = savedShoppinglistsPage.content.cloneNode(true);
                 container.appendChild(savedShoppinglistsPageContent);
 
+                const shoppinglistPageContainer = document.getElementById("shoppinglistPageContainer");
+                let count = 0;
+
+                for (const list of responseData) {
+                    count++;
+                    const collapsibleDiv = document.createElement("div");
+                    collapsibleDiv.classList.add("collapsible");
+
+                    const listName = document.createElement("div");
+                    listName.classList.add("collapsible-header");
+
+                    listName.innerHTML = "Handleliste " + count;
+                    listName.addEventListener("click", function (evt) {
+                        this.classList.toggle("active");
+                        const listItems = this.nextElementSibling;
+                        if (listItems.style.display === "block") {
+                            listItems.style.display = "none";
+                        } else {
+                            listItems.style.display = "block";
+                        }
+                    });
+
+                    const listItemsContainer = document.createElement("div");
+                    listItemsContainer.classList.add("collapsible-content");
+
+                    const bulletpoints = document.createElement("ul");
+                    const listContent = JSON.parse(list.items)
+                    for (let item of listContent) {
+                        const listItem = document.createElement("li");
+                        listItem.innerHTML = item;
+                        bulletpoints.appendChild(listItem);
+                    };
+                    const btnDeleteList = document.createElement("button")
+                    btnDeleteList.innerHTML = "Slett liste"
+
+                    btnDeleteList.addEventListener("click", async function (evt) {
+                        const shoppinglistId = list.shoppinglistId;
+                        console.log(shoppinglistId);
+                        const respon = await deleteShoppinglist("/shoppingList/delete", shoppinglistId);
+                        console.log(respon);
+                        container.innerHTML = "";
+                        const savedShoppinglistsPageContent = savedShoppinglistsPage.content.cloneNode(true);
+                        container.appendChild(savedShoppinglistsPageContent);
+                    })
+
+                    listItemsContainer.appendChild(bulletpoints);
+                    listItemsContainer.appendChild(btnDeleteList);
+                    collapsibleDiv.appendChild(listName);
+                    collapsibleDiv.appendChild(listItemsContainer);
+                    shoppinglistPageContainer.appendChild(collapsibleDiv);
+                }
+
             }
+
         });
 
 
@@ -594,6 +661,22 @@
 
         #recipeContent {
             list-style-type: none;
+        }
+
+        .collapsible {
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .collapsible-header {
+            background-color: #f1f1f1;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .collapsible-content {
+            padding: 10px;
+            display: none;
         }
     </style>
 

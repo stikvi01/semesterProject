@@ -61,6 +61,24 @@ SHOPPINGLIST_API.get('/getlist', async (req, res, next) => {
         res.status(HttpCodes.ServerSideErrorRespons.InternalServerError).send("Internal server error");
     }
 });
+SHOPPINGLIST_API.delete('/delete', async (req, res) => {
+    console.log(req.query);
+    console.log(req.query.shoppinglistId);
+    const { shoppinglistId } = req.query;
+    const shoppingList = new ShoppingList();
+    shoppingList.shoppinglistId = shoppinglistId;
+   
+    try {
+        console.log(shoppingList)
+      
+       await shoppingList.delete();
+        res.status(HttpCodes.SuccesfullRespons.Ok).send("Delete shopping list succsessful");
+    } catch (error) {
+        console.error("Error deleting shopping list:", error);
+        res.status(HttpCodes.ServerSideErrorRespons.InternalServerError).send("Internal server error");
+    }
+});
+
 
 
 

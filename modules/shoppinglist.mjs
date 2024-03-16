@@ -19,8 +19,7 @@ class ShoppingList {
   }
   async delete() {
 
-    /// TODO: What happens if the DBManager fails to complete its task?
-    if (this.id != null) {
+    if (this.shoppinglistId != null) {
       return await DBManager.deleteShoppinglist(this);
     }
 
