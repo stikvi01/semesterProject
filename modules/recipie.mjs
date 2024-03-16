@@ -11,13 +11,13 @@ class Recipe {
   }
 
   async getRecipie(ingredientsArray) {
-       // Assuming you need to pass the ingredientsArray to the DBManager
+       
        let dbRecipie = await DBManager.getRecipe(ingredientsArray);
 
        if (dbRecipie.length > 0) {
          return {
            success: true,
-           recipies: dbRecipie, // Adjust the property name if needed
+           recipies: dbRecipie, 
          };
        }
    

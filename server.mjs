@@ -2,6 +2,7 @@ import 'dotenv/config' ;
 import express from 'express'; 
 import USER_API from './routes/usersRoute.mjs'; 
 import RECIPE_API from './routes/RecipieRoute.mjs';
+import SHOPPINGLIST_API from './routes/shoppingListRoute.mjs';
 import logger from './modules/logging.mjs';
 import errorHandler from './modules/errorHandler.mjs';
 
@@ -16,7 +17,10 @@ server.use(express.static('public'));
 
 server.use("/user", USER_API); 
 
-server.use("/recipie", RECIPE_API)
+server.use("/recipie", RECIPE_API);
+
+server.use("/shoppingList", SHOPPINGLIST_API);
+
 
 
 server.get("/", (req, res, next) => {

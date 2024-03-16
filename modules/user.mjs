@@ -16,7 +16,7 @@ class User {
     /// TODO: What happens if the DBManager fails to complete its task?
 
     // We know that if a user object dos not have the ID, then it cant be in the DB.
-console.log(this.id);
+    console.log(this.id);
     if (this.id == null) {
       return await DBManager.createUser(this);
     } else {
@@ -77,8 +77,8 @@ console.log(this.id);
             email: this.email,
           }
         }
-      }else{
-        return{
+      } else {
+        return {
           success: false,
           message: "Invalid login credentials"
         }
@@ -88,7 +88,7 @@ console.log(this.id);
       return {
         success: false,
         message: "User dosent exist"
-      } 
+      }
     }
   }
 }
