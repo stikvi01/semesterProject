@@ -1,0 +1,151 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    background-color: antiquewhite;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    max-width: 320px;
+    margin: 30px auto;
+
+}
+
+h1 {
+    color: #c5151c;
+}
+
+img {
+    max-width: 150px;
+    margin: 0px auto;
+}
+
+input {
+    color: gray;
+    background-color: #ebe6dc;
+    font-family: monospace;
+    border: 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    margin: 10px 0;
+}
+
+#recipeSuggestionDiv {
+    background-color: #e8c59c;
+    border-bottom: 1px;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 15px;
+    margin: 10px;
+}
+
+#btnAddIngredients {
+    color: gray;
+    background-color: #e8c59c;
+    font-family: monospace;
+    border: 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+}
+
+button {
+    color: antiquewhite;
+    background-color: #5c914d;
+    font-family: monospace;
+    border: 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    margin: 10px 0;
+}
+
+#btnGenerateRecipe {
+    color: antiquewhite;
+    background-color: #5c914d;
+    font-family: monospace;
+    border: 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    margin: 10px 0;
+}
+
+#removeIngridientTekst {
+    color: #c5151c;
+    ;
+}
+
+#btnUserPage {
+    color: antiquewhite;
+    background-color: #e8c59c;
+    font-family: monospace;
+    border: 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    margin: 10px 0;
+    width: 25%;
+}
+
+#contentContainer {
+    display: flex;
+    flex-direction: column;
+    max-width: 320px;
+    margin: 30px auto;
+}
+
+#recipeContainer {
+    display: none;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+ul li {
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    color: gray;
+    background-color: #ebe6dc;
+    font-family: monospace;
+    border: 0;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    margin: 10px 0;
+    flex-grow: 1;
+}
+
+#recipeContent {
+    list-style-type: none;
+}
+
+.collapsible {
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+}
+
+.collapsible-header {
+    background-color: #f1f1f1;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.collapsible-content {
+    padding: 10px;
+    display: none;
+}

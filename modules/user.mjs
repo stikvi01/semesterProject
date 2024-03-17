@@ -1,10 +1,8 @@
-
 import DBManager from "./storageManager.mjs";
 
 class User {
 
   constructor(email, pswHash, name, id) {
-    ///TODO: Are these the correct fields for your project?
     this.email = email;
     this.pswHash = pswHash;
     this.name = name;
@@ -13,9 +11,6 @@ class User {
 
   async save() {
 
-    /// TODO: What happens if the DBManager fails to complete its task?
-
-    // We know that if a user object dos not have the ID, then it cant be in the DB.
     console.log(this.id);
     if (this.id == null) {
       return await DBManager.createUser(this);
@@ -26,7 +21,6 @@ class User {
 
   async delete() {
 
-    /// TODO: What happens if the DBManager fails to complete its task?
     if (this.id != null) {
       return await DBManager.deleteUser(this);
     }
@@ -48,16 +42,13 @@ class User {
           id: this.id,
           name: this.name,
           email: this.email,
-          // Include any other relevant user information here
         }
       }
     } else {
 
-      return null; // You might want to return a special value or throw an error here
+      return null;
     }
   }
-
-
 
   async login() {
     let dbUser = await DBManager.loginUser(this.email, this.pswHash);

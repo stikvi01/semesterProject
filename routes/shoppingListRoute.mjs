@@ -34,7 +34,7 @@ SHOPPINGLIST_API.post('/makelist', async (req, res) => {
 });
 SHOPPINGLIST_API.get('/getlist', async (req, res, next) => {
     const userId  = req.query.userId;
-    console.log("hello"+userId);
+  console.log(userId);
     if (!userId) {
         return res.status(HttpCodes.ClientSideErrorRespons.BadRequest).send("Missing data").end();
     }
@@ -42,7 +42,8 @@ SHOPPINGLIST_API.get('/getlist', async (req, res, next) => {
     try {
         const shoppingList = new ShoppingList();
         shoppingList.userId = userId;
-        const loginResult = await shoppingList.getShoppinglist();
+        const loginResult = await shoppingList.getShoppinglist();//endre navn 
+        console.log(loginResult);
 
         if (loginResult.success) {
             const shoppingListContents = loginResult.shoppinglist;

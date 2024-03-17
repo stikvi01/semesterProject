@@ -21,12 +21,8 @@ server.use("/recipie", RECIPE_API);
 
 server.use("/shoppingList", SHOPPINGLIST_API);
 
-
-
 server.get("/", (req, res, next) => {
-
    req.originalUrl
-
    res.status(200).send(JSON.stringify({ msg: "These are not the droids...." })).end();
 
 });

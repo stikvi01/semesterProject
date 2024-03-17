@@ -4,7 +4,7 @@
     <input type="text" id="fridgeInp" placeholder="Legg til">
     <button id="btnAddIngredients">Legg til ingredienser</button>
     <p id="removeIngridientTekst">Klikk på ingrediensen for å fjerne den</p>
-    <ul id="ingredientsList"></ul> 
+    <ul id="ingredientsList"></ul>
     <br>
     <button id="btnGenerateRecipe">Generer middags forslag</button>
     <button id="btnUserPage">👤</button>
@@ -46,7 +46,6 @@
     <button id="btnHome">Hjem</button>
 </template>
 
-
 <template id="userSettings">
     <h2>Profil</h2>
     <h1 id="userNameValue"></h1>
@@ -61,29 +60,29 @@
 <template id="userCreate">
     <div>
         <h1>Lag bruker</h1>
-        <input type="text" id="name"placeholder="Brukernavn"><br>
-        <input type="email" id="email"placeholder="Email"><br />
-        <input type="password" id="pswHash"placeholder="Passord"><br />
+        <input type="text" id="name" placeholder="Brukernavn"><br>
+        <input type="email" id="email" placeholder="Email"><br />
+        <input type="password" id="pswHash" placeholder="Passord"><br />
         <p id="createUserErrorMsg"></p>
         <button id="btnCreateUserSendData">Lag bruker</button>
     </div>
 </template>
+
 <template id="userUpdate">
     <div>
         <h1>Endre bruker</h1>
         <input type="text" id="changeUserName"><br>
         <input type="email" id="changeEmailName"><br />
-        <input type="password" id="changePswHash"placeholder="Passord"><br />
+        <input type="password" id="changePswHash" placeholder="Passord"><br />
         <p id="updateUserErrorMsg"></p>
         <button id="btnUpdateUserSendData">Endre Bruker</button>
-    
     </div>
 </template>
+
 <template id="savedShoppinglistsPage">
     <div>
         <h1>Handlelister</h1>
-      <div id="shoppinglistPageContainer"></div>
+        <div id="shoppinglistPageContainer"></div>
         <button id="btnHome">Hjem</button>
-    
     </div>
 </template>

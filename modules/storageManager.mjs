@@ -22,22 +22,18 @@ class DBManager {
             await client.connect();
             const output = await client.query('UPDATE "public"."Users" set "name" = $1, "email" = $2, "pswHash" = $3 where id = $4;', [user.name, user.email, user.pswHash, user.id]);
 
-
         } catch (error) {
             console.error('Error in update user:', error.stack);
-            //TODO : Error handling?? Remember that this is a module seperate from your server 
         } finally {
-            client.end(); // Always disconnect from the database.
+            client.end();
         }
-
         return user;
-
-
     }
 
-
     async deleteUser(user) {
+
         const client = new pg.Client(this.#credentials);
+
         try {
             await client.connect();
             const output = await client.query('DELETE FROM "public"."Users" WHERE id = $1;', [user.id]);
@@ -68,7 +64,7 @@ class DBManager {
             throw error;
             return false;
         } finally {
-            client.end(); // Always disconnect from the database.
+            client.end();
         }
 
         return user;
@@ -76,6 +72,7 @@ class DBManager {
     }
 
     async get(user) {
+
         const client = new pg.Client(this.#credentials);
         user = null;
 
@@ -97,6 +94,7 @@ class DBManager {
     }
 
     async loginUser(email, password) {
+
         const client = new pg.Client(this.#credentials);
         let user = null;
 
@@ -107,7 +105,6 @@ class DBManager {
             console.log(output);
             user = output.rows[0];
 
-
         } catch (error) {
             console.error('Error logging in:', error.stack);
         } finally {
@@ -117,6 +114,7 @@ class DBManager {
     }
 
     async getRecipe(ingredientList) {
+
         const client = new pg.Client(this.#credentials);
         let recipes = [];
 
@@ -140,10 +138,10 @@ class DBManager {
                         console.log('Second query executed successfully');
 
                         recipes.push(...secondOutput.rows);
-                    }
-                }
+                    };
+                };
 
-            }
+            };
 
         } catch (error) {
             console.error('Error in getRecipe:', error.stack);
@@ -175,12 +173,13 @@ class DBManager {
             throw error;
             return false;
         } finally {
-            client.end(); // Always disconnect from the database.
+            client.end(); 
         }
 
         return shoppingList;
 
     }
+
     async updateShoppinglist(shoppingList) {
         const client = new pg.Client(this.#credentials);
 
@@ -191,14 +190,14 @@ class DBManager {
 
         } catch (error) {
             console.error('Error in update user:', error.stack);
-            //TODO : Error handling?? Remember that this is a module seperate from your server 
         } finally {
-            client.end(); // Always disconnect from the database.
+            client.end(); 
         }
 
         return shoppingList;
 
     }
+
     async deleteShoppinglist(shoppingList) {
 
         const client = new pg.Client(this.#credentials);
@@ -228,7 +227,7 @@ class DBManager {
 
         try {
             await client.connect();
-            console.log('Connected to the database');
+
             const sql = 'SELECT * FROM "public"."shoppinglist" WHERE "userId" LIKE $1';
             const params = [userId];
             const output = await client.query(sql, params);
@@ -239,10 +238,7 @@ class DBManager {
                 shoppingList = output.rows;
             } else {
                 console.log('No shopping list found for the user');
-            }
-
-            console.log("this is shoppinglist", shoppingList); // Log shoppingList
-            console.log("this is output", output); // Log output
+            };
         } catch (error) {
             console.error('Error in getShoppinglist:', error.stack);
             throw error;
@@ -254,11 +250,6 @@ class DBManager {
         return shoppingList;
     }
 
-
 }
-
-
-
-
 
 export default new DBManager(process.env.DB_CONNECTIONSTRING_PROD);

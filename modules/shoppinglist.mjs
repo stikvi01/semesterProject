@@ -2,21 +2,23 @@ import DBManager from "./storageManager.mjs";
 
 class ShoppingList {
 
-  constructor(shoppinglistId, items, userId) {
-    this.id = shoppinglistId;
+  constructor(id, items, userId) {
+
+    this.id = id;
     this.items = items;
     this.userId = userId;
 
   }
 
   async save() {
-    console.log("this is id"+this.id);
+ 
     if (this.id == null) {
       return await DBManager.createShoppinglist(this);
     } else {
       return await DBManager.updateShoppinglist(this);
     }
   }
+
   async delete() {
 
     if (this.id != null) {
@@ -49,7 +51,6 @@ class ShoppingList {
         };
     }
 }
-
 
 }
 export default ShoppingList;
