@@ -12,14 +12,13 @@ USER_API.post('/login', async (req, res, next) => {
     if (!email || !pswHash) {
         return res.status(HttpCodes.ClientSideErrorRespons.BadRequest).send("Missing data fields").end();
     }
+    
 
     try {
         const user = new User();
         user.email = email;
         user.pswHash = pswHash;
         const loginResult = await user.login();
-
-
 
         if (loginResult.success) {
             const userInfo = loginResult.user;
@@ -48,11 +47,9 @@ USER_API.post('/', async (req, res, next) => {
         user.email = email;
         user.pswHash = pswHash;
 
-        ///TODO: Does the user exist?
         let exists = false;
 
         if (!exists) {
-            //TODO: What happens if this fails?
             user = await user.save();
             res.status(HttpCodes.SuccesfullRespons.Ok).json(JSON.stringify(user)).end();
         } else {
@@ -67,7 +64,7 @@ USER_API.post('/', async (req, res, next) => {
 
 USER_API.put('/:id', async (req, res) => {
     const { name, email, pswHash, id } = req.body;
-    let user = new User(); //TODO: The user info comes as part of the request 
+    let user = new User(); 
     console.log(email);
     console.log(user.email);
     

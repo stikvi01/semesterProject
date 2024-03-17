@@ -4,7 +4,7 @@ import { HttpCodes } from "../modules/httpCodes.mjs";
 
 
 const SHOPPINGLIST_API = express.Router();
-SHOPPINGLIST_API.use(express.json()); // This makes it so that express parses all incoming payloads as JSON for this route.
+SHOPPINGLIST_API.use(express.json()); 
 
 SHOPPINGLIST_API.post('/makelist', async (req, res) => {
     const { userId , items } = req.body
@@ -14,17 +14,17 @@ SHOPPINGLIST_API.post('/makelist', async (req, res) => {
         const shoppingList = new ShoppingList();
         shoppingList.userId = userId;
         shoppingList.items = items;
-        const loginResult = await shoppingList.save();
+        const result = await shoppingList.save();
 
-        if (loginResult) {
-            const shoppinglistSaved = loginResult.shoppingList;
+        if (result) {
+            const shoppinglistSaved = result.shoppingList;
             res.status(HttpCodes.SuccesfullRespons.Ok).json(shoppinglistSaved).end();
         } else {
-            console.error("Login failed:", loginResult.message);
-            if (loginResult.error) {
-                console.error("Detailed error:", loginResult.error);
+            console.error("Login failed:", result.message);
+            if (result.error) {
+                console.error("Detailed error:", result.error);
             }
-            res.status(HttpCodes.ClientSideErrorRespons.Unauthorized).send("Invalid login credentials");
+            res.status(HttpCodes.ClientSideErrorRespons.BadRequest).send("Not found");
         }
     } catch (error) {
         
@@ -42,19 +42,19 @@ SHOPPINGLIST_API.get('/getlist', async (req, res, next) => {
     try {
         const shoppingList = new ShoppingList();
         shoppingList.userId = userId;
-        const loginResult = await shoppingList.getShoppinglist();//endre navn 
-        console.log(loginResult);
+        const result = await shoppingList.getShoppinglist();
+        console.log(result);
 
-        if (loginResult.success) {
-            const shoppingListContents = loginResult.shoppinglist;
+        if (result.success) {
+            const shoppingListContents = result.shoppinglist;
             
             res.status(HttpCodes.SuccesfullRespons.Ok).json(shoppingListContents).end();
         } else {
-            console.error("Login failed:", loginResult.message);
-            if (loginResult.error) {
-                console.error("Detailed error:", loginResult.error);
+            console.error("Login failed:", result.message);
+            if (result.error) {
+                console.error("Detailed error:", result.error);
             }
-            res.status(HttpCodes.ClientSideErrorRespons.Unauthorized).send("Invalid login credentials");
+            res.status(HttpCodes.ClientSideErrorRespons.BadRequestuthorized).send("Not found");
         }
     } catch (error) {
         

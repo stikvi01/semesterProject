@@ -182,8 +182,6 @@
    }
 
 
-
-
    async function insertTemplatesFrom(source) {
        const templates = await fetch(source).then(d => d.text());
        document.body.insertAdjacentHTML("beforeend", templates);
@@ -291,18 +289,23 @@
                                });
 
                                btnSaveShoppinglist.addEventListener("click", async function (evt) {
+                                const shoppingListMsg = document.getElementById("shoppingListMsg");
                                    let shoppinglistArray = Array.from(shoppinglistContainer.children).map(item => item.textContent);
                                    shoppinglistArray = JSON.stringify(shoppinglistArray);
                                    const userId = localStorage.getItem("userId");
+                                   if (!userId){
+                                    shoppingListMsg.innerHTML = "Logg inn for å lagre handlelisten!"
+                                   }else{
                                    const items = shoppinglistArray;
                                    const shoppinglist = { userId, items };
 
                                    const respon = await createShoppinglist("/shoppingList/makelist", shoppinglist);
                                    console.log(respon);
                                    if (respon.status == 200) {
-                                       const shoppingListMsg = document.getElementById("shoppingListMsg");
+                                       
                                        shoppingListMsg.innerHTML = "Handlelisten er lagret på bruker siden"
                                    };
+                                }
                                });
                            })
                        });
@@ -420,6 +423,7 @@
            const btnUpdateUserSendData = document.getElementById("btnUpdateUserSendData");
            const changePswHash = document.getElementById("changePswHash");
            const updateUserErrorMsg = document.getElementById("updateUserErrorMsg");
+           const btnBackToLastpage = document.getElementById("btnBackToLastpage");
 
            const name = localStorage.getItem("userName");
            const email = localStorage.getItem("userEmail");
@@ -427,6 +431,15 @@
 
            changeUserName.value += name;
            changeEmailName.value += email;
+           btnBackToLastpage.addEventListener("click", function(evt){
+            container.innerHTML = "";
+               const userSettingsContent = userSettings.content.cloneNode(true);
+               container.appendChild(userSettingsContent);
+               const userEmail = localStorage.getItem("userEmail")
+               const userName = localStorage.getItem("userName")
+               userEmailValue.innerHTML += userEmail
+               userNameValue.innerHTML = userName
+           })
 
            btnUpdateUserSendData.onclick = async function (e) {
                const name = changeUserName.value;
@@ -442,6 +455,10 @@
                const user = { name, email, pswHash, id };
                console.log(user);
                const respon = await updateUser(`/user/${id}`, user);
+               if (respon.status != 200) {
+                updateUserErrorMsg.innerHTML = "Kan ikke bruke denne emailen";
+                return;
+            };
                const responseData = await respon.json();
                console.log(responseData);
                const userName = name
@@ -451,7 +468,7 @@
                container.innerHTML = "";
                const homePageContent = homePage.content.cloneNode(true);
                container.appendChild(homePageContent);
-
+              
 
            };
 
@@ -489,7 +506,7 @@
 
                const listItemsContainer = document.createElement("div");
                listItemsContainer.classList.add("collapsible-content");
-
+               listItemsContainer.innerHTML = "Trykk på ingrediensene for å fjerne dem, husk å lagre listen :)"
                const bulletpoints = document.createElement("ul");
                const listContent = JSON.parse(list.items)
                for (let item of listContent) {
@@ -505,8 +522,8 @@
                    })
                };
                const btnDeleteList = document.createElement("button")
-               btnDeleteList.innerHTML = "🗑️"
-
+               btnDeleteList.innerHTML = "Slett"
+               btnDeleteList.setAttribute("id", "btnDeleteList");
                const btnUpdateList = document.createElement("button")
                btnUpdateList.innerHTML = "Lagre listen"
 

@@ -20,10 +20,13 @@ class DBManager {
 
         try {
             await client.connect();
-            const output = await client.query('UPDATE "public"."Users" set "name" = $1, "email" = $2, "pswHash" = $3 where id = $4;', [user.name, user.email, user.pswHash, user.id]);
+            const sql = 'UPDATE "public"."Users" set "name" = $1, "email" = $2, "pswHash" = $3 where id = $4;'
+            const params = [user.name, user.email, user.pswHash, user.id]
+            const output = await client.query(sql, params);
 
         } catch (error) {
             console.error('Error in update user:', error.stack);
+            
         } finally {
             client.end();
         }
@@ -36,7 +39,9 @@ class DBManager {
 
         try {
             await client.connect();
-            const output = await client.query('DELETE FROM "public"."Users" WHERE id = $1;', [user.id]);
+            const sql = 'DELETE FROM "public"."Users" WHERE id = $1;'
+            const params = [user.id];
+            const output = await client.query(sql , params);
             return true;
         } catch (error) {
             console.error("Error deleting user:", error);
@@ -78,12 +83,13 @@ class DBManager {
 
         try {
             await client.connect();
-            const output = await client.query('SELECT * FROM "public"."Users" WHERE "id" = $1', [user.id]);
+            const sql = 'SELECT * FROM "public"."Users" WHERE "id" = $1'
+            const params = [user.id]
+            const output = await client.query(sql, params);
 
             console.log(output);
             user = output.rows[0];
-            // Rest of your code
-
+        
         } catch (error) {
             console.error('Error in getting user :', error.stack);
         } finally {
@@ -100,7 +106,9 @@ class DBManager {
 
         try {
             await client.connect();
-            const output = await client.query('SELECT * FROM "public"."Users" WHERE "email" = $1', [email]);
+            const sql = 'SELECT * FROM "public"."Users" WHERE "email" = $1';
+            const params = [email]
+            const output = await client.query( sql, params );
 
             console.log(output);
             user = output.rows[0];
@@ -182,14 +190,16 @@ class DBManager {
 
     async updateShoppinglist(shoppingList) {
         const client = new pg.Client(this.#credentials);
-
+        
         try {
             await client.connect();
-            const output = await client.query('UPDATE "public"."shoppinglist" set "items" = $1 where "id" = $2;', [shoppingList.items, shoppingList.id]);
+            const sql = 'UPDATE "public"."shoppinglist" set "items" = $1 where "id" = $2;'
+            const params = [shoppingList.items, shoppingList.id];
+            const output = await client.query(sql, params);
 
 
         } catch (error) {
-            console.error('Error in update user:', error.stack);
+            console.error('Error in update shoppinglist:', error.stack);
         } finally {
             client.end(); 
         }
