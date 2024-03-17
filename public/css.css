@@ -135,13 +135,24 @@ ul li {
 }
 
 .collapsible {
+
     border: 1px solid #ccc;
+    background-color: #e8c59c;
+    border-radius: 8px;
     margin-bottom: 10px;
 }
 
 .collapsible-header {
-    background-color: #f1f1f1;
-    padding: 10px;
+    color: antiquewhite;
+    background-color: #5c914d;
+    font-family: monospace;
+    border: 0;
+    padding: 15px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    font-size: 20px;
+    text-align: center;
+    
     cursor: pointer;
 }
 
